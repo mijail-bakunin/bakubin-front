@@ -14,9 +14,10 @@ export type Chat = {
   title: string;
   messages: Message[];
   createdAt: number;
+  isGenerating?: boolean;
 };
 
-type ChatStore = {
+export type ChatStore = {
   chats: Chat[];
   activeChatId: string | null;
 
@@ -24,7 +25,14 @@ type ChatStore = {
   createChat: () => string;
   setActiveChat: (id: string) => void;
   addMessage: (chatId: string, message: Message) => void;
+  addAssistantMessage: (chatId: string, content: string) => void;
   regenerateLastMessage: (chatId: string) => void;
+  clearChat: (chatId: string) => void;
+
+  renameChat: (chatId: string, newTitle: string) => void;
+  deleteChat: (chatId: string) => void;
+
+  setGenerating: (chatId: string, value: boolean) => void;
 };
 
 export const useChatStore = create<ChatStore>((set, get) => ({
@@ -38,6 +46,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       title: "Nuevo chat",
       messages: [],
       createdAt: Date.now(),
+      isGenerating: false,
     };
 
     set((state) => ({
@@ -60,6 +69,27 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }));
   },
 
+  addAssistantMessage: (chatId, content) => {
+    set((state) => ({
+      chats: state.chats.map((chat) =>
+        chat.id === chatId
+          ? {
+              ...chat,
+              messages: [
+                ...chat.messages,
+                {
+                  id: crypto.randomUUID(),
+                  role: "assistant",
+                  content,
+                  createdAt: Date.now(),
+                },
+              ],
+            }
+          : chat
+      ),
+    }));
+  },
+
   regenerateLastMessage: (chatId) => {
     const { chats } = get();
     const chat = chats.find((c) => c.id === chatId);
@@ -71,7 +101,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
     if (!lastAssistantMessage) return;
 
-    // Por ahora, sólo dejamos un placeholder
     const regenerated: Message = {
       id: crypto.randomUUID(),
       role: "assistant",
@@ -84,6 +113,44 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         c.id === chatId
           ? { ...c, messages: [...c.messages, regenerated] }
           : c
+      ),
+    }));
+  },
+
+  clearChat: (chatId : String) => {
+    set((state) => ({
+      chats: state.chats.map((c) =>
+        c.id === chatId ? { ...c, messages: [] } : c
+      ),
+    }));
+  },
+
+  renameChat: (chatId, newTitle) => {
+    set((state) => ({
+      chats: state.chats.map((c) =>
+        c.id === chatId ? { ...c, title: newTitle } : c
+      ),
+    }));
+  },
+
+  deleteChat: (chatId) => {
+    set((state) => {
+      const newChats = state.chats.filter((c) => c.id !== chatId);
+      const newActive =
+        state.activeChatId === chatId ? newChats[0]?.id || null : state.activeChatId;
+
+      return {
+        chats: newChats,
+        activeChatId: newActive,
+      };
+    });
+  },
+  
+
+  setGenerating: (chatId, value) => {
+    set((state) => ({
+      chats: state.chats.map((c) =>
+        c.id === chatId ? { ...c, isGenerating: value } : c
       ),
     }));
   },
