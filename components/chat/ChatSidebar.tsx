@@ -1,41 +1,42 @@
 "use client";
 
 import { useChatStore } from "@/store/chatStore";
-import Link from "next/link";
+import ChatSidebarItem from "./ChatSidebarItem";
+import { Plus } from "lucide-react";
+import { groupChats } from "@/lib/groupChats";
 
 export default function ChatSidebar() {
-  const { chats, createChat, setActiveChat, activeChatId } = useChatStore();
-
-  const handleNewChat = () => {
-    const id = createChat();
-    setActiveChat(id);
-  };
+  const { chats, createChat } = useChatStore();
+  const groups = groupChats(chats);
 
   return (
-    <div className="w-72 bg-zinc-900 h-full border-r border-zinc-800 flex flex-col">
-      <div className="p-4 border-b border-zinc-800">
-        <button
-          onClick={handleNewChat}
-          className="w-full py-2 px-3 bg-red-700 hover:bg-red-600 rounded text-white"
-        >
-          + Nuevo Chat
-        </button>
-      </div>
+    <div className="flex flex-col w-64 bg-black border-r border-zinc-900 h-full p-3 overflow-y-auto">
 
-      <div className="flex-1 overflow-y-auto">
-        {chats.map((chat) => (
-          <Link
-            key={chat.id}
-            href={`/chat/${chat.id}`}
-            onClick={() => setActiveChat(chat.id)}
-            className={`block p-3 text-sm border-b border-zinc-800 cursor-pointer ${
-              activeChatId === chat.id ? "bg-zinc-800 text-red-400" : "text-gray-300"
-            }`}
-          >
-            {chat.title}
-          </Link>
-        ))}
-      </div>
+      {/* Nuevo chat */}
+      <button
+        onClick={createChat}
+        className="flex items-center gap-2 px-3 py-2 mb-4 rounded-lg bg-red-700 hover:bg-red-600 transition"
+      >
+        <Plus size={16} />
+        Nuevo Chat
+      </button>
+
+      {/* Listas por grupo */}
+      {Object.entries(groups).map(([groupName, chats]) =>
+        chats.length > 0 ? (
+          <div key={groupName} className="mb-4">
+            <div className="text-xs px-2 py-1 text-zinc-500 uppercase tracking-wide">
+              {groupName}
+            </div>
+
+            <div className="space-y-1">
+              {chats.map((chat) => (
+                <ChatSidebarItem key={chat.id} chat={chat} />
+              ))}
+            </div>
+          </div>
+        ) : null
+      )}
     </div>
   );
 }
