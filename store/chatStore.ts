@@ -2,6 +2,8 @@
 
 import { create } from "zustand";
 
+export type ModalType = "clear-chat" | "delete-chat" | "info" | null;
+
 export type Message = {
   id: string;
   role: "user" | "assistant";
@@ -21,7 +23,14 @@ export type ChatStore = {
   chats: Chat[];
   activeChatId: string | null;
 
-  // Actions
+  modal: {
+    type: ModalType;
+    chatId?: string;
+  };
+
+  openModal: (type: ModalType, chatId?: string) => void;
+  closeModal: () => void;
+
   createChat: () => string;
   setActiveChat: (id: string | null) => void;
   addMessage: (chatId: string, message: Message) => void;
@@ -38,6 +47,18 @@ export type ChatStore = {
 export const useChatStore = create<ChatStore>((set, get) => ({
   chats: [],
   activeChatId: null,
+
+  modal: { type: null, chatId: undefined },
+
+  openModal: (type, chatId) =>
+    set(() => ({
+      modal: { type, chatId },
+    })),
+
+  closeModal: () =>
+    set(() => ({
+      modal: { type: null, chatId: undefined },
+    })),
 
   createChat: () => {
     const id = crypto.randomUUID();

@@ -6,6 +6,7 @@ import ChatSidebar from "./ChatSidebar";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import ChatTopbar from "./ChatTopbar";
+import Modal from "../ui/Modal";
 import FloatingToolbar from "./FloatingToolbar";
 
 export default function ChatLayout() {
@@ -15,7 +16,6 @@ export default function ChatLayout() {
 
   const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
 
-  // Si no hay chat activo pero sí hay chats → seleccionamos el primero una sola vez
   useEffect(() => {
     if (!activeChatId && chats.length > 0) {
       setActiveChat(chats[0].id);
@@ -27,7 +27,6 @@ export default function ChatLayout() {
       <ChatSidebar />
 
       <div className="relative flex h-full flex-1 flex-col">
-        {/* Toolbar flotante (ya no toca Zustand de forma agresiva) */}
         <FloatingToolbar />
 
         {activeChat ? (
@@ -52,6 +51,8 @@ export default function ChatLayout() {
             </div>
           </div>
         )}
+
+        <Modal />
       </div>
     </div>
   );
