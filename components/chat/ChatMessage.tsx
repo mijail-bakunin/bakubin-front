@@ -12,19 +12,19 @@ type Props = {
 export default function ChatMessage({ message }: Props) {
   const isUser = message.role === "user";
 
-  // Texto mostrado (streaming para IA)
+  // Texto mostrado en pantalla (streaming sólo para IA)
   const [displayed, setDisplayed] = useState(
     isUser ? message.content : ""
   );
 
   useEffect(() => {
+    // El usuario nunca streamea
     if (isUser) {
-      // El usuario nunca streamea
       setDisplayed(message.content);
       return;
     }
 
-    // Para textos cortos, no streamear (más natural)
+    // Para textos cortos (<50 chars), no streameamos para que sea más natural
     if (message.content.length < 50) {
       setDisplayed(message.content);
       return;
@@ -46,16 +46,17 @@ export default function ChatMessage({ message }: Props) {
     return () => clearInterval(interval);
   }, [message.content, isUser]);
 
+  const bubbleClass = isUser
+    ? "ml-auto bg-red-700 text-white"
+    : "mr-auto bg-zinc-800 text-zinc-200";
+
   return (
     <div
       className={clsx(
         "p-3 rounded-lg max-w-[80%] text-sm leading-relaxed",
-        isUser
-          ? "ml-auto bg-red-700 text-white"
-          : "mr-auto bg-zinc-800 text-zinc-200"
+        bubbleClass
       )}
     >
-      {/* Evitamos que renderice antes de tener texto */}
       {displayed.trim().length > 0 ? (
         <MarkdownRenderer content={displayed} />
       ) : (

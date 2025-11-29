@@ -30,7 +30,7 @@ export default function MarkdownRenderer({ content }: Props) {
                 marginBottom: "12px",
                 borderRadius: "8px",
                 padding: "16px",
-                background: "#1e1e1e", // base dracula black
+                background: "#1e1e1e",
               }}
             >
               {String(children).replace(/\n$/, "")}
@@ -45,7 +45,6 @@ export default function MarkdownRenderer({ content }: Props) {
           );
         },
 
-        // HEADINGS
         h1: ({ children }) => (
           <h1 className="text-2xl font-bold mt-6 mb-4 text-red-400">
             {children}
