@@ -85,7 +85,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   addMessage: (chatId, message) => {
     set((state) => ({
       chats: state.chats.map((c) =>
-        c.id === chatId ? { ...c, messages: [...c.messages, message] } : c
+        c.id === chatId
+          ? { ...c, messages: [...c.messages, message] }
+          : c
       ),
     }));
   },
@@ -138,8 +140,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }));
   },
 
-
-  clearChat: (chatId : String) => {
+  clearChat: (chatId: string) => {
     set((state) => ({
       chats: state.chats.map((c) =>
         c.id === chatId ? { ...c, messages: [] } : c
