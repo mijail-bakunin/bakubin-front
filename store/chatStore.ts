@@ -23,7 +23,7 @@ export type ChatStore = {
 
   // Actions
   createChat: () => string;
-  setActiveChat: (id: string) => void;
+  setActiveChat: (id: string | null) => void;
   addMessage: (chatId: string, message: Message) => void;
   addAssistantMessage: (chatId: string, content: string) => void;
   regenerateLastMessage: (chatId: string) => void;
@@ -117,7 +117,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }));
   },
 
-  clearChat: (chatId : String) => {
+  clearChat: (chatId) => {
     set((state) => ({
       chats: state.chats.map((c) =>
         c.id === chatId ? { ...c, messages: [] } : c
@@ -145,7 +145,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       };
     });
   },
-  
 
   setGenerating: (chatId, value) => {
     set((state) => ({

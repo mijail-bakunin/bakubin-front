@@ -1,50 +1,42 @@
 "use client";
 
 import { useChatStore } from "@/store/chatStore";
-import { RotateCcw, Square, Info } from "lucide-react";
+import { Info, RotateCcw, Square } from "lucide-react";
 
 export default function ChatTopbar() {
-  const { activeChatId, chats, regenerateLastMessage } = useChatStore();
+  // Selectores simples → no generan warnings de getSnapshot
+  const activeChatId = useChatStore((s) => s.activeChatId);
+  const chats = useChatStore((s) => s.chats);
 
-  const chat = chats.find((c) => c.id === activeChatId);
-
-  if (!chat) return null;
-
-  const isGenerating = false; 
-  // Más adelante esto va a reflejar el estado real del streaming
+  const activeChat = chats.find((c) => c.id === activeChatId);
+  const title = activeChat?.title ?? "Selecciona o crea un chat";
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-black/70 backdrop-blur">
-      {/* Título */}
-      <h1 className="text-lg font-medium opacity-90 truncate">
-        {chat.title || "Chat sin título"}
+    <div className="flex items-center justify-between border-b border-zinc-800 px-6 py-3">
+      <h1 className="text-lg font-medium text-zinc-100 truncate">
+        {title}
       </h1>
 
-      {/* Controles */}
-      <div className="flex items-center gap-3">
-
-        {/* Botón Regenerar */}
+      {/* Iconos “fantasma” por ahora, puro front */}
+      <div className="flex items-center gap-4 text-zinc-500">
         <button
-          onClick={() => regenerateLastMessage(chat.id)}
-          className="p-2 hover:bg-zinc-800 rounded transition"
-          title="Regenerar respuesta"
+          type="button"
+          className="hover:text-zinc-200 transition"
+          aria-label="Regenerar última respuesta"
         >
           <RotateCcw size={18} />
         </button>
-
-        {/* Botón Detener Generación (por ahora mock) */}
         <button
-          disabled={!isGenerating}
-          className="p-2 hover:bg-zinc-800 rounded transition disabled:opacity-40"
-          title="Detener generación"
+          type="button"
+          className="hover:text-zinc-200 transition"
+          aria-label="Detener generación"
         >
           <Square size={18} />
         </button>
-
-        {/* Botón Info */}
         <button
-          className="p-2 hover:bg-zinc-800 rounded transition"
-          title="Información del chat"
+          type="button"
+          className="hover:text-zinc-200 transition"
+          aria-label="Información del chat"
         >
           <Info size={18} />
         </button>

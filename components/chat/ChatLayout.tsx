@@ -1,55 +1,54 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useChatStore } from "@/store/chatStore";
 import ChatSidebar from "./ChatSidebar";
+import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import ChatMessage from "./ChatMessage";
 import ChatTopbar from "./ChatTopbar";
+import FloatingToolbar from "./FloatingToolbar";
 
 export default function ChatLayout() {
-  const { activeChatId, chats } = useChatStore();
+  const activeChatId = useChatStore((s) => s.activeChatId);
+  const chats = useChatStore((s) => s.chats);
+  const setActiveChat = useChatStore((s) => s.setActiveChat);
 
-  const chat = chats.find((c) => c.id === activeChatId);
+  const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
 
-  // Referencia al contenedor de mensajes para autoscroll
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
+  // Si no hay chat activo pero sí hay chats → seleccionamos el primero una sola vez
   useEffect(() => {
-    if (!messagesEndRef.current) return;
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [chat?.messages.length]);
+    if (!activeChatId && chats.length > 0) {
+      setActiveChat(chats[0].id);
+    }
+  }, [activeChatId, chats, setActiveChat]);
 
   return (
-    <div className="flex w-full h-full overflow-hidden">
+    <div className="flex h-screen w-full bg-black text-white">
       <ChatSidebar />
 
-      {/* Área principal */}
-      <div className="flex flex-col flex-1 bg-black text-white h-full">
-        {!chat ? (
-          <div className="flex flex-1 items-center justify-center opacity-60">
-            <div className="text-center">
-              <h1 className="text-3xl mb-2 font-semibold">Bienvenido a Bakubin</h1>
-              <p className="text-sm">Crea un nuevo chat para comenzar</p>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col h-full">
-            {/* Header */}
+      <div className="relative flex h-full flex-1 flex-col">
+        {/* Toolbar flotante (ya no toca Zustand de forma agresiva) */}
+        <FloatingToolbar />
+
+        {activeChat ? (
+          <>
             <ChatTopbar />
 
-            {/* Mensajes */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {chat.messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-              ))}
-              {/* ancla para el autoscroll */}
-              <div ref={messagesEndRef} />
+              <ChatMessages messages={activeChat.messages} />
             </div>
 
-            {/* Input */}
-            <div className="p-4 border-t border-zinc-800">
+            <div className="border-t border-zinc-800 p-4">
               <ChatInput />
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-1 items-center justify-center opacity-60">
+            <div className="text-center">
+              <h1 className="text-3xl mb-2 font-semibold">
+                Bienvenido a Bakubin
+              </h1>
+              <p className="text-sm">Crea un nuevo chat para comenzar</p>
             </div>
           </div>
         )}
