@@ -1,0 +1,47 @@
+/* ===============================================
+   C2 THEME — Global visual system for Bakubin
+   Safe: no layout changes, no JS deps
+   =============================================== */
+
+:root {
+  /* Palette */
+  --c2-bg: #0b0b0c;
+  --c2-panel: #141417;
+  --c2-panel-soft: #1c1c20;
+  --c2-border: #2a2a2d;
+  --c2-border-soft: #1f1f22;
+
+  --c2-text: #ececef;
+  --c2-text-soft: #9a9aa0;
+
+  --c2-accent: #e23a3a;
+  --c2-accent-soft: #7a1c1c;
+
+  /* Radii */
+  --c2-radius: 14px;
+  --c2-radius-sm: 8px;
+  --c2-radius-lg: 20px;
+
+  /* Shadows */
+  --c2-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --c2-shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.25);
+
+  /* Spacing */
+  --c2-gap: 12px;
+  --c2-gap-sm: 8px;
+  --c2-gap-lg: 18px;
+
+  /* Transitions */
+  --c2-transition: 160ms ease-out;
+
+  /* Font */
+  --c2-font: 'Inter', system-ui, sans-serif;
+}
+
+/* Apply font & background */
+.c2 {
+  background: var(--c2-bg);
+  color: var(--c2-text);
+  font-family: var(--c2-font);
+  height: 100%;
+}

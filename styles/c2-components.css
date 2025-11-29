@@ -1,0 +1,137 @@
+/* ===============================================
+   C2 COMPONENT OVERRIDES — Bakubin
+   Non-destructive: only visual layer
+   =============================================== */
+
+/* -----------------------------------------------
+   SIDEBAR
+--------------------------------------------------*/
+.c2 .sidebar {
+  background: var(--c2-panel);
+  border-right: 1px solid var(--c2-border);
+}
+
+.c2 .sidebar button {
+  border-radius: var(--c2-radius-sm);
+  transition: var(--c2-transition);
+}
+
+/* -----------------------------------------------
+   TOOLBAR (floating)
+--------------------------------------------------*/
+.c2 .floating-toolbar {
+  background: rgba(10, 10, 12, 0.65);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--c2-border);
+  border-radius: var(--c2-radius);
+  box-shadow: var(--c2-shadow);
+  padding: 10px 14px;
+}
+
+.c2 .floating-toolbar button {
+  transition: var(--c2-transition);
+  border-radius: var(--c2-radius-sm);
+}
+
+/* -----------------------------------------------
+   TOPBAR
+--------------------------------------------------*/
+.c2 .topbar {
+  background: var(--c2-panel-soft);
+  border-bottom: 1px solid var(--c2-border);
+  padding: 18px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* -----------------------------------------------
+   INPUT AREA
+--------------------------------------------------*/
+.c2 textarea {
+  background: var(--c2-panel);
+  border: 1px solid var(--c2-border-soft);
+  border-radius: var(--c2-radius);
+  padding: 12px;
+  color: var(--c2-text);
+  transition: var(--c2-transition);
+}
+
+.c2 textarea:focus {
+  outline: none;
+  border-color: var(--c2-accent);
+}
+
+/* -----------------------------------------------
+   BUTTONS
+--------------------------------------------------*/
+.c2 button {
+  border-radius: var(--c2-radius-sm);
+  transition: var(--c2-transition);
+}
+
+.c2 button:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+/* -----------------------------------------------
+   CHAT MESSAGES
+--------------------------------------------------*/
+.c2 .message-user {
+  background: var(--c2-accent);
+  border-radius: var(--c2-radius-lg);
+  padding: 12px 16px;
+  color: white;
+  box-shadow: var(--c2-shadow);
+}
+
+.c2 .message-assistant {
+  background: var(--c2-panel-soft);
+  border: 1px solid var(--c2-border);
+  border-radius: var(--c2-radius-lg);
+  padding: 12px 16px;
+}
+
+/* -----------------------------------------------
+   MARKDOWN
+--------------------------------------------------*/
+.c2 pre code {
+  border-radius: var(--c2-radius-sm);
+  padding: 16px !important;
+}
+
+.c2 code {
+  background: var(--c2-panel);
+  padding: 2px 5px;
+  border-radius: var(--c2-radius-sm);
+}
+
+/* -----------------------------------------------
+   TABLES
+--------------------------------------------------*/
+.c2 table {
+  border-collapse: collapse;
+  border: 1px solid var(--c2-border);
+}
+
+.c2 th {
+  background: var(--c2-panel);
+  padding: 10px;
+  border: 1px solid var(--c2-border);
+  color: var(--c2-accent);
+}
+
+.c2 td {
+  padding: 10px;
+  border: 1px solid var(--c2-border);
+}
+
+/* -----------------------------------------------
+   BLOCKQUOTE
+--------------------------------------------------*/
+.c2 blockquote {
+  border-left: 4px solid var(--c2-accent);
+  padding-left: 14px;
+  margin: 12px 0;
+  color: var(--c2-text-soft);
+  font-style: italic;
+}
