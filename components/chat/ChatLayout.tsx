@@ -14,13 +14,16 @@ export default function ChatLayout() {
   const chats = useChatStore((s) => s.chats);
   const setActiveChat = useChatStore((s) => s.setActiveChat);
 
-  const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
+  // FIND ACTIVE CHAT (esto no causa loops)
+  const activeChat =
+    chats.find((c) => c.id === activeChatId) ?? null;
 
+  // FIX DEFINITIVO → evitar escuchar "chats" entero
   useEffect(() => {
     if (!activeChatId && chats.length > 0) {
       setActiveChat(chats[0].id);
     }
-  }, [activeChatId, chats, setActiveChat]);
+  }, [activeChatId, chats.length, setActiveChat]);
 
   return (
     <div className="flex h-screen w-full bg-black text-white">

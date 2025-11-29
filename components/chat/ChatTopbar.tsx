@@ -3,9 +3,12 @@
 import { useChatStore } from "@/store/chatStore";
 
 export default function ChatTopbar() {
-  const chat = useChatStore((s) =>
-    s.chats.find((c) => c.id === s.activeChatId)
-  );
+  // SELECTORES SEPARADOS (seguro)
+  const activeChatId = useChatStore((s) => s.activeChatId);
+  const chats = useChatStore((s) => s.chats);
+
+  // NO se ejecuta dentro del selector → es seguro
+  const chat = chats.find((c) => c.id === activeChatId) ?? null;
 
   return (
     <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">

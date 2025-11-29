@@ -6,7 +6,10 @@ import { Plus } from "lucide-react";
 import { groupChats } from "@/lib/groupChats";
 
 export default function ChatSidebar() {
-  const { chats, createChat } = useChatStore();
+  const chats = useChatStore((s) => s.chats);
+  const createChat = useChatStore((s) => s.createChat);
+  const activeChatId = useChatStore((s) => s.activeChatId);
+
   const groups = groupChats(chats);
 
   return (
@@ -21,17 +24,20 @@ export default function ChatSidebar() {
         Nuevo Chat
       </button>
 
-      {/* Listas por grupo */}
-      {Object.entries(groups).map(([groupName, chats]) =>
-        chats.length > 0 ? (
+      {Object.entries(groups).map(([groupName, list]) =>
+        list.length > 0 ? (
           <div key={groupName} className="mb-4">
             <div className="text-xs px-2 py-1 text-zinc-500 uppercase tracking-wide">
               {groupName}
             </div>
 
             <div className="space-y-1">
-              {chats.map((chat) => (
-                <ChatSidebarItem key={chat.id} chat={chat} />
+              {list.map((chat) => (
+                <ChatSidebarItem
+                  key={chat.id}
+                  chat={chat}
+                  active={chat.id === activeChatId}
+                />
               ))}
             </div>
           </div>

@@ -1,87 +1,108 @@
 "use client";
 
 import { useState } from "react";
+import { MessageSquare, Pencil, Trash2 } from "lucide-react";
 import { useChatStore, Chat } from "@/store/chatStore";
-import { MessageSquare, Pen, Trash2, Loader2 } from "lucide-react";
 import clsx from "clsx";
 
 type Props = {
   chat: Chat;
+  active: boolean;
 };
 
-export default function ChatSidebarItem({ chat }: Props) {
-  const { activeChatId, setActiveChat, renameChat, deleteChat } = useChatStore();
+export default function ChatSidebarItem({ chat, active }: Props) {
+  const setActiveChat = useChatStore((s) => s.setActiveChat);
+  const renameChat = useChatStore((s) => s.renameChat);
+  const openModal = useChatStore((s) => s.openModal);
 
-  const isActive = activeChatId === chat.id;
-  const [isRenaming, setIsRenaming] = useState(false);
-  const [tempTitle, setTempTitle] = useState(chat.title);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftTitle, setDraftTitle] = useState(chat.title);
 
-  const handleRename = () => {
-    renameChat(chat.id, tempTitle.trim() || "Nuevo chat");
-    setIsRenaming(false);
+  const handleSelect = () => {
+    setActiveChat(chat.id);
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    openModal("delete-chat", chat.id); // solo borrar abre modal
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDraftTitle(chat.title);
+    setIsEditing(true);
+  };
+
+  const commitRename = () => {
+    const trimmed = draftTitle.trim();
+
+    if (trimmed && trimmed !== chat.title) {
+      renameChat(chat.id, trimmed);
+    }
+
+    setIsEditing(false);
+  };
+
+  const cancelRename = () => {
+    setDraftTitle(chat.title);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      commitRename();
+    } else if (e.key === "Escape") {
+      cancelRename();
+    }
   };
 
   return (
     <div
+      onClick={handleSelect}
       className={clsx(
-        "group relative flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-all",
-        isActive
-          ? "bg-red-900/40 text-white"
-          : "hover:bg-zinc-800/60 text-zinc-300"
+        "group flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer",
+        "transition bg-zinc-900/40 hover:bg-zinc-900/60",
+        active && "bg-red-900/40 border-l-4 border-red-600"
       )}
-      onClick={() => setActiveChat(chat.id)}
     >
-      {/* BARRA ROJA LATERAL (ACTIVO) */}
-      {isActive && (
-        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-red-600 rounded-r"></div>
-      )}
-
-      {/* Contenido */}
-      <div className="flex items-center gap-2 flex-1 overflow-hidden">
+      {/* Título + Ícono */}
+      <div className="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
         <MessageSquare size={16} />
-        {isRenaming ? (
+
+        {isEditing ? (
           <input
             autoFocus
-            className="bg-transparent border-b border-zinc-500 outline-none flex-1"
-            value={tempTitle}
-            onChange={(e) => setTempTitle(e.target.value)}
-            onBlur={handleRename}
-            onKeyDown={(e) => e.key === "Enter" && handleRename()}
+            value={draftTitle}
+            onChange={(e) => setDraftTitle(e.target.value)}
+            onBlur={commitRename}
+            onKeyDown={handleKeyDown}
+            className="w-full bg-zinc-900/80 text-sm text-white outline-none border border-red-600 rounded px-2 py-1"
           />
         ) : (
-          <span className="truncate flex items-center gap-2">
-            {chat.title}
-
-            {/* Icono “typing” si está generando */}
-            {chat.isGenerating && (
-              <Loader2 size={14} className="animate-spin text-red-400" />
-            )}
-          </span>
+          <span className="truncate text-sm">{chat.title}</span>
         )}
       </div>
 
-      {/* Acciones */}
-      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsRenaming(true);
-          }}
-          className="hover:text-white"
-        >
-          <Pen size={14} />
-        </button>
+      {/* Iconos laterales */}
+      {!isEditing && (
+        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition">
+          <button
+            type="button"
+            onClick={handleEdit}
+            className="hover:text-red-400 transition"
+          >
+            <Pencil size={16} />
+          </button>
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            deleteChat(chat.id);
-          }}
-          className="hover:text-red-400"
-        >
-          <Trash2 size={14} />
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="hover:text-red-400 transition"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
