@@ -133,20 +133,19 @@ pnpm lint      # Linter
 
 ## 📂 Estructura del proyecto
 
-```bash
-FROM node:20-alpine
-
-WORKDIR /app
-COPY . .
-RUN pnpm install --frozen-lockfile
-RUN pnpm build
-
-EXPOSE 3000
-CMD ["pnpm", "start"]
-```
+/
+├─ public/             # Assets estáticos
+├─ src/
+│  ├─ app/             # Rutas y páginas Next.js
+│  ├─ components/      # Componentes de UI
+│  ├─ hooks/           # Hooks personalizados
+│  ├─ lib/             # Funciones auxiliares
+│  └─ styles/          # Estilos globales
+└─ package.json
 
 
 ---
+
 
 ## 🔐 Variables de entorno
 
@@ -155,6 +154,8 @@ Crear un archivo `.env.local` basado en `.env.example`:
 ```bash
 NEXT_PUBLIC_API_URL=https://ruta-al-backend-del-modelo
 ```
+
+---
 
 ## 🐳 Dockerización futura
 
@@ -175,17 +176,62 @@ CMD ["pnpm", "start"]
 
 ---
 
+
 ## 📜 Frases de Bakunin (referencia rápida)
 
 Ver sección inicial de 📜 Frases de Bakunin para las citas completas y el contexto político que inspira el proyecto.
 
 ---
-
 📄 Licencia — AGPL v3
 
-Este proyecto se distribuye bajo los términos de la GNU Affero General Public License v3 (AGPLv3).
+Este proyecto se distribuye bajo los términos de la **GNU Affero General Public License v3 (AGPLv3).**
 
 La AGPLv3 garantiza que el software y todas sus modificaciones se mantengan libres, incluso cuando se utilice o se ponga a disposición a través de servicios web.
 Toda versión modificada o extendida de este proyecto debe conservar la misma licencia y publicar su código fuente completo, asegurando que ninguna entidad pueda privatizar, cerrar o apropiarse del trabajo colectivo.
 
 El texto completo de la licencia se encuentra en el archivo LICENSE en la raíz del repositorio:[Licencia Pública General de Affero de GNU v3 (AGPL-3.0)](https://www.gnu.org/licenses/agpl-3.0.txt)
+
+A continuación se incluye un fragmento del texto requerido por la licencia:
+
+---
+
+## GNU AFFERO GENERAL PUBLIC LICENSE  
+### Version 3, 19 November 2007
+
+Copyright (C) 2007 Free Software Foundation, Inc.  
+<https://fsf.org/>
+
+Everyone is permitted to copy and distribute verbatim copies  
+of this license document, but changing it is not allowed.
+
+### Preamble
+
+The GNU Affero General Public License is a free, copyleft license for software and other kinds of works, specifically designed to ensure cooperation with the community in the case of network server software.
+
+The licenses for most software and other practical works are designed to take away your freedom to share and change the works. By contrast, our General Public Licenses are intended to guarantee your freedom to share and change all versions of a program—to make sure it remains free software for all its users.
+
+When we speak of free software, we are referring to freedom, not price. Our General Public Licenses are designed to make sure that you have the freedom to distribute copies of free software (and charge for them if you wish), that you receive source code or can get it if you want it, that you can change the software or use pieces of it in new free programs, and that you know you can do these things.
+
+Developers that use our General Public Licenses protect your rights with two steps:  
+(1) assert copyright on the software, and  
+(2) offer you this License which gives you legal permission to copy, distribute and/or modify the software.
+
+A secondary benefit of defending all users' freedom is that improvements made in alternate versions of the program, if they receive widespread use, become available for other developers to incorporate. Many developers of free software are heartened and encouraged by the resulting cooperation.
+
+However, in the case of software used on network servers, this result may fail to come about. The GNU General Public License permits making a modified version and letting the public access it on a server without ever releasing its source code to the public.
+
+The GNU Affero General Public License is designed specifically to ensure that, in such cases, the modified source code becomes available to the community. It requires the operator of a network server to provide the modified source code of the software running there to the users of that server. Therefore, public use of a modified version, on a publicly accessible server, gives the public access to the source code of the modified version.
+
+An older license, called the Affero General Public License and published by Affero, was designed to accomplish similar goals. This is a different license, not a version of the Affero GPL, but Affero has released a new version of the Affero GPL which permits relicensing under this license.
+
+The precise terms and conditions for copying, distribution and modification follow.
+
+---
+
+## TERMS AND CONDITIONS
+
+### 0. Definitions.
+
+[...]  
+
+PARA MAS INFORMACIÓN: LEER EL LICENSE.md 
