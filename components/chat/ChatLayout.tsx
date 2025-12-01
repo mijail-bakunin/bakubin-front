@@ -4,29 +4,28 @@ import { useEffect, useRef } from "react";
 import { useChatStore } from "@/store/chatStore";
 import ChatSidebar from "./ChatSidebar";
 import ChatInput from "./ChatInput";
-import ChatMessage from "./ChatMessage";
+import ChatMessages from "./ChatMessages";
 import ChatTopbar from "./ChatTopbar";
 import FloatingToolbar from "./FloatingToolbar";
 import Modal from "../ui/Modal";
 
 export default function ChatLayout() {
-  // SELECTORES ESTABLES (uno por propiedad)
   const activeChatId = useChatStore((s) => s.activeChatId);
   const chats = useChatStore((s) => s.chats);
   const setActiveChat = useChatStore((s) => s.setActiveChat);
 
-  // Encontrar chat activo (cálculo puro, no rompe nada)
   const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
 
-  // Autoselección del primer chat solo cuando corresponde
+  // Autoseleccionar el primer chat al cargar
   useEffect(() => {
     if (!activeChatId && chats.length > 0) {
       setActiveChat(chats[0].id);
     }
   }, [activeChatId, chats.length, setActiveChat]);
 
-  // Auto-scroll
+  // Auto-scroll al final
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({
@@ -34,26 +33,30 @@ export default function ChatLayout() {
         block: "end",
       });
     }
-  }, [activeChat?.messages.length]);
+  }, [activeChat?.messages.length, activeChat?.isGenerating]);
 
   return (
     <div className="flex h-screen w-full bg-black text-white overflow-hidden">
       <ChatSidebar />
 
-      <div className="relative flex h-full flex-1 flex-col">
-        {/* Barra flotante */}
+      {/* Contenedor principal de chat */}
+      <div className="relative flex flex-col flex-1 h-full">
+
+        {/* Toolbar flotante — fija y no dependiente del scroll */}
         <FloatingToolbar />
 
         {activeChat ? (
           <>
             <ChatTopbar />
 
-            {/* Lista de mensajes */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {activeChat.messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-              ))}
+            {/* Mensajes con scroll */}
+            <div className="flex-1 overflow-y-auto">
+              <ChatMessages
+                messages={activeChat.messages}
+                isTyping={activeChat.isGenerating}
+              />
 
+              {/* Marcador para auto-scroll */}
               <div ref={messagesEndRef} />
             </div>
 

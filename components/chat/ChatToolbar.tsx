@@ -1,77 +1,63 @@
 "use client";
 
-import { useChatStore } from "@/store/chatStore";
-import { useParams } from "next/navigation";
-import { Trash2, RefreshCcw, Download, Info } from "lucide-react";
+import { useUIStore } from "@/store/uiStore";
+import { useState } from "react";
+import clsx from "clsx";
+import { Paperclip, Mic, Image, Settings, Trash2 } from "lucide-react";
 
 export default function ChatToolbar() {
-  const params = useParams();
-  const chatId = params.id as string;
+  const hide = useUIStore((s) => s.hideToolbar);
 
-  const clearChat = useChatStore((s) => s.clearChat);
-  const regenerateLastMessage = useChatStore((s) => s.regenerateLastMessage);
+  const [active, setActive] = useState<string | null>(null);
 
-  // Exportar como .txt por ahora
-  const exportChat = () => {
-    const chat = useChatStore.getState().chats.find((c) => c.id === chatId);
-    if (!chat) return;
-
-    const text = chat.messages
-      .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
-      .join("\n\n");
-
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `chat-${chatId}.txt`;
-    a.click();
-
-    URL.revokeObjectURL(url);
-  };
+  const buttons = [
+    { id: "file", icon: <Paperclip />, label: "Adjuntar" },
+    { id: "audio", icon: <Mic />, label: "Audio" },
+    { id: "image", icon: <Image />, label: "Imagen" },
+    { id: "settings", icon: <Settings />, label: "Opciones" },
+    { id: "clear", icon: <Trash2 />, label: "Borrar chat" },
+  ];
 
   return (
     <div
-      className="
-        absolute top-4 right-4
-        flex gap-2
-        bg-black/40 backdrop-blur-md
-        p-2 rounded-lg border border-white/10
-        shadow-lg
-      "
+      className={clsx(
+        "fixed bottom-6 left-1/2 -translate-x-1/2 z-40",
+        "transition-all duration-300 ease-out",
+        hide ? "opacity-0 translate-y-6 pointer-events-none" : "opacity-100 translate-y-0"
+      )}
     >
-      {/* Regenerar */}
-      <button
-        onClick={() => regenerateLastMessage(chatId)}
-        className="p-2 rounded hover:bg-red-600/40 transition"
+      <div
+        className={clsx(
+          // DOCK
+          "flex items-center gap-3 px-4 py-2 rounded-2xl shadow-2xl",
+          "backdrop-blur-md bg-black/40 border border-red-500/10",
+          "transition-all duration-300 ease-out",
+          "hover:scale-[1.02] active:scale-[0.97]"
+        )}
       >
-        <RefreshCcw size={18} className="text-white" />
-      </button>
+        {buttons.map((btn, index) => (
+          <div key={btn.id} className="flex items-center">
+            {/* Botón */}
+            <button
+              onClick={() => setActive(btn.id)}
+              className={clsx(
+                "p-2 rounded-xl transition-all duration-300",
+                "hover:bg-red-700/20 hover:text-red-400",
+                active === btn.id
+                  ? "text-red-400 bg-red-600/20 shadow-[0_0_10px_rgba(255,80,80,0.5)]"
+                  : "text-zinc-300"
+              )}
+            >
+              {btn.icon}
+            </button>
 
-      {/* Borrar chat */}
-      <button
-        onClick={() => clearChat(chatId)}
-        className="p-2 rounded hover:bg-red-600/40 transition"
-      >
-        <Trash2 size={18} className="text-white" />
-      </button>
-
-      {/* Exportar */}
-      <button
-        onClick={exportChat}
-        className="p-2 rounded hover:bg-red-600/40 transition"
-      >
-        <Download size={18} className="text-white" />
-      </button>
-
-      {/* Info (por ahora un alert) */}
-      <button
-        onClick={() => alert(`ID del chat: ${chatId}`)}
-        className="p-2 rounded hover:bg-red-600/40 transition"
-      >
-        <Info size={18} className="text-white" />
-      </button>
+            {/* SEPARADOR (salvo el último) */}
+            {index < buttons.length - 1 && (
+              <div className="w-[1px] h-5 bg-red-500/20 mx-2" />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
