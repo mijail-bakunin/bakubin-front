@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { Message } from "@/store/chatStore";
 import ChatMessage from "./ChatMessage";
 import clsx from "clsx";
@@ -37,31 +37,41 @@ function groupByDate(messages: Message[]): MessageGroup[] {
 
 export default function ChatMessages({ messages, isTyping }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   const grouped = groupByDate(messages ?? []);
 
+  // Detecta si el usuario está en el fondo (importante)
+  const isAtBottom = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return true;
+    const dif = el.scrollHeight - el.scrollTop - el.clientHeight;
+    return dif < 20; // margen tolerante
+  }, []);
+
+  // Auto-scroll inteligente
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    el.scrollTo({
-      top: el.scrollHeight,
-      behavior: "smooth",
-    });
-  }, [messages.length, isTyping]);
+    if (isAtBottom()) {
+      el.scrollTo({
+        top: el.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages.length, isTyping, isAtBottom]);
 
   return (
     <div
       ref={containerRef}
-      className="flex-1 overflow-y-auto px-6 py-4 space-y-6"
+      className="flex-1 overflow-y-auto px-6 py-4 space-y-6 custom-scroll"
     >
       {grouped.map((group) => (
         <div key={group.dateLabel} className="space-y-3">
           {/* Separador de fecha */}
           <div className="flex items-center gap-3 text-xs text-zinc-500 select-none">
             <div className="h-px flex-1 bg-zinc-800" />
-            <span className="uppercase tracking-wide">
-              {group.dateLabel}
-            </span>
+            <span className="uppercase tracking-wide">{group.dateLabel}</span>
             <div className="h-px flex-1 bg-zinc-800" />
           </div>
 
@@ -71,7 +81,7 @@ export default function ChatMessages({ messages, isTyping }: Props) {
         </div>
       ))}
 
-      {/* Indicador de “Bakubin está escribiendo…” */}
+      {/* Indicador de “escribiendo…” */}
       {isTyping && (
         <div className="w-full flex justify-start mt-2">
           <div className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-300">
