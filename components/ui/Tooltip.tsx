@@ -7,7 +7,7 @@ export default function Tooltip({
   label,
   children,
   side = "right",
-  disabled = false, // ← NUEVO
+  disabled = false,
 }: {
   label: string;
   children: React.ReactNode;
@@ -17,9 +17,11 @@ export default function Tooltip({
   const [visible, setVisible] = useState(false);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-  // Si el tooltip está deshabilitado, lo ocultamos inmediatamente
+  // Evitar setState directo dentro del effect
   useEffect(() => {
-    if (disabled && visible) setVisible(false);
+    if (disabled && visible) {
+      setTimeout(() => setVisible(false), 0);
+    }
   }, [disabled, visible]);
 
   const show = () => {
@@ -33,9 +35,7 @@ export default function Tooltip({
     setVisible(false);
   };
 
-  if (disabled) {
-    return <>{children}</>;
-  }
+  if (disabled) return <>{children}</>;
 
   return (
     <div
