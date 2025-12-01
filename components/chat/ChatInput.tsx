@@ -12,9 +12,9 @@ import {
   FileArchive,
   File,
   X,
-  Maximize2,
 } from "lucide-react";
 import clsx from "clsx";
+import { useImageViewerStore } from "@/store/useImageViewerStore";
 
 type AttachmentType = "image" | "file";
 
@@ -34,35 +34,31 @@ export default function ChatInput() {
 
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
-
-  // adjuntos múltiples
   const [attachments, setAttachments] = useState<Attachment[]>([]);
-  // estado de drag&drop
   const [isDragging, setIsDragging] = useState(false);
-  // imagen ampliada
-  const [zoomImage, setZoomImage] = useState<string | null>(null);
+
+  const { open: openImageViewer } = useImageViewerStore();
 
   const menuRef = useRef<HTMLDivElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dropRef = useRef<HTMLDivElement | null>(null);
 
-  // -----------------------------
-  // cerrar menú al click fuera
-  // -----------------------------
+  // -------------------------------------
+  // cerrar menú al hacer click afuera
+  // -------------------------------------
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
+    function handler(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
     }
-
-    if (open) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // -----------------------------
-  // drag & drop sobre la zona del input
-  // -----------------------------
+  // -------------------------------------
+  // drag & drop
+  // -------------------------------------
   useEffect(() => {
     const area = dropRef.current;
     if (!area) return;
@@ -72,67 +68,66 @@ export default function ChatInput() {
       e.stopPropagation();
     };
 
-    const handleDragEnter = (e: DragEvent) => {
+    const enter = (e: DragEvent) => {
       prevent(e);
       setIsDragging(true);
     };
 
-    const handleDragOver = (e: DragEvent) => {
+    const over = (e: DragEvent) => {
       prevent(e);
       setIsDragging(true);
     };
 
-    const handleDragLeave = (e: DragEvent) => {
+    const leave = (e: DragEvent) => {
       prevent(e);
       setIsDragging(false);
     };
 
-    const handleDrop = (e: DragEvent) => {
+    const drop = (e: DragEvent) => {
       prevent(e);
       setIsDragging(false);
       if (!e.dataTransfer?.files) return;
       handleMultipleFiles(e.dataTransfer.files);
     };
 
-    area.addEventListener("dragenter", handleDragEnter);
-    area.addEventListener("dragover", handleDragOver);
-    area.addEventListener("dragleave", handleDragLeave);
-    area.addEventListener("drop", handleDrop);
+    area.addEventListener("dragenter", enter);
+    area.addEventListener("dragover", over);
+    area.addEventListener("dragleave", leave);
+    area.addEventListener("drop", drop);
 
     return () => {
-      area.removeEventListener("dragenter", handleDragEnter);
-      area.removeEventListener("dragover", handleDragOver);
-      area.removeEventListener("dragleave", handleDragLeave);
-      area.removeEventListener("drop", handleDrop);
+      area.removeEventListener("dragenter", enter);
+      area.removeEventListener("dragover", over);
+      area.removeEventListener("dragleave", leave);
+      area.removeEventListener("drop", drop);
     };
   }, [activeChatId]);
 
-  // -----------------------------
-  // cargar varios archivos
-  // -----------------------------
+  // -------------------------------------
+  // múltiples archivos
+  // -------------------------------------
   const handleMultipleFiles = (fileList: FileList) => {
     const files = Array.from(fileList);
 
-    const newAttachments: Attachment[] = files.map((file) => {
+    const mapped = files.map((file) => {
       const url = URL.createObjectURL(file);
       const isImage = file.type.startsWith("image/");
-      return { url, file, type: isImage ? "image" : "file" };
+      return { url, file, type: isImage ? "image" : "file" } as Attachment;
     });
 
-    setAttachments((prev) => [...prev, ...newAttachments]);
+    setAttachments((prev) => [...prev, ...mapped]);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     handleMultipleFiles(e.target.files);
-    // permitir seleccionar el mismo archivo de nuevo
     e.target.value = "";
     setOpen(false);
   };
 
-  // -----------------------------
-  // envío de mensaje
-  // -----------------------------
+  // -------------------------------------
+  // enviar mensaje
+  // -------------------------------------
   const handleSend = () => {
     if (!activeChatId) return;
 
@@ -142,10 +137,8 @@ export default function ChatInput() {
 
     if (!hasText && !hasFiles) return;
 
-    // texto del usuario
     if (hasText) addUserMessage(trimmed);
 
-    // adjuntos
     if (hasFiles) {
       attachments.forEach((att) => {
         addMessage(activeChatId, {
@@ -182,30 +175,26 @@ export default function ChatInput() {
     }
   };
 
-  const simulateAssistantReply = (msg: string) => {
+  const simulateAssistantReply = (text: string) => {
     if (!activeChatId) return;
 
     setGenerating(activeChatId, true);
 
     setTimeout(() => {
-      addAssistantMessage(activeChatId, `Respuesta simulada a: "${msg}"`);
+      addAssistantMessage(activeChatId, `Respuesta simulada a: "${text}"`);
       setGenerating(activeChatId, false);
     }, 600);
   };
 
-  // -----------------------------
-  // icono para cada tipo de archivo
-  // -----------------------------
   const getFileIcon = (mime: string) => {
     if (mime.startsWith("audio/")) return <FileAudio size={20} />;
-    if (mime.includes("zip") || mime.includes("rar")) return <FileArchive size={20} />;
-    if (mime.includes("pdf") || mime.includes("text")) return <FileText size={20} />;
+    if (mime.includes("zip") || mime.includes("rar"))
+      return <FileArchive size={20} />;
+    if (mime.includes("pdf") || mime.includes("text"))
+      return <FileText size={20} />;
     return <File size={20} />;
   };
 
-  // -----------------------------
-  // teclado: Enter para enviar
-  // -----------------------------
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -213,52 +202,39 @@ export default function ChatInput() {
     }
   };
 
-  const handleRemoveAttachment = (index: number) => {
-    setAttachments((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // -----------------------------
-  // UI
-  // -----------------------------
   return (
     <div ref={dropRef} className="relative">
 
-      {/* PREVIEW DE ADJUNTOS (centrada, sin scroll visible) */}
+      {/* PREVIEW ADJUNTOS */}
       {attachments.length > 0 && (
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-3 px-3 py-2 rounded-2xl bg-black/80 border border-zinc-700/80 shadow-2xl">
-          {attachments.map((att, idx) => (
-            <div
-              key={idx}
-              className="relative group w-20"
-            >
+          {attachments.map((att, i) => (
+            <div key={i} className="relative w-20">
               <div
                 className={clsx(
                   "w-20 h-20 rounded-xl border border-zinc-700 bg-zinc-900",
-                  "flex items-center justify-center overflow-hidden shadow-md",
-                  "animate-fade-slide-up"
+                  "flex items-center justify-center overflow-hidden shadow-md"
                 )}
               >
                 {att.type === "image" ? (
                   <img
                     src={att.url}
-                    alt={att.file.name}
                     className="w-full h-full object-cover cursor-pointer"
-                    onClick={() => setZoomImage(att.url)}
+                    onClick={() => openImageViewer(att.url)}
                   />
                 ) : (
-                  <div className="flex flex-col items-center justify-center px-1 text-[0.7rem] text-zinc-200">
+                  <div className="flex flex-col items-center text-zinc-200 text-xs px-1">
                     {getFileIcon(att.file.type)}
-                    <span className="mt-1 w-full truncate text-[0.65rem] leading-tight text-center">
-                      {att.file.name}
-                    </span>
+                    <span className="truncate mt-1 w-full">{att.file.name}</span>
                   </div>
                 )}
               </div>
 
-              {/* Botón X */}
               <button
-                onClick={() => handleRemoveAttachment(idx)}
-                className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md"
+                onClick={() =>
+                  setAttachments((prev) => prev.filter((_, idx) => idx !== i))
+                }
+                className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center"
               >
                 <X size={12} />
               </button>
@@ -267,26 +243,17 @@ export default function ChatInput() {
         </div>
       )}
 
-      {/* OVERLAY DRAG & DROP */}
+      {/* DRAG OVERLAY */}
       {isDragging && (
-        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-lg border-2 border-dashed border-red-500/70 bg-red-500/5 backdrop-blur-sm">
-          <span className="text-sm text-red-200">
-            Suelta archivos para adjuntarlos
-          </span>
+        <div className="absolute inset-0 flex items-center justify-center border-2 border-dashed border-red-500/70 bg-red-500/5 backdrop-blur-sm text-red-200 rounded-lg pointer-events-none z-10">
+          Suelta archivos para adjuntarlos
         </div>
       )}
 
-      {/* MENÚ VERTICAL DEL BOTÓN + */}
+      {/* MENÚ + */}
       <div ref={menuRef}>
         {open && (
-          <div
-            className={clsx(
-              "absolute bottom-14 left-3 flex flex-col gap-2 bg-zinc-900",
-              "border border-zinc-700 rounded-xl p-2 shadow-xl",
-              "transition-all duration-200 origin-bottom-left",
-              "opacity-100 translate-y-0"
-            )}
-          >
+          <div className="absolute bottom-14 left-3 flex flex-col gap-2 bg-zinc-900 border border-zinc-700 rounded-xl p-2 shadow-xl">
             <button
               onClick={() => fileInputRef.current?.click()}
               className="flex items-center gap-2 p-2 text-sm hover:bg-zinc-800 rounded-md"
@@ -302,7 +269,7 @@ export default function ChatInput() {
             </button>
 
             <button
-              onClick={() => alert("Audio aún no implementado")}
+              onClick={() => alert("Audio no implementado aún")}
               className="flex items-center gap-2 p-2 text-sm hover:bg-zinc-800 rounded-md"
             >
               <Mic size={16} /> Audio
@@ -311,21 +278,19 @@ export default function ChatInput() {
         )}
       </div>
 
-      {/* INPUT FILE OCULTO */}
       <input
         ref={fileInputRef}
         type="file"
+        multiple
         accept="image/*,audio/*,.pdf,.txt,.zip,.rar"
         className="hidden"
-        multiple
         onChange={handleFileChange}
       />
 
-      {/* INPUT PRINCIPAL */}
-      <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-900 border border-zinc-800 relative">
-        {/* Botón + */}
+      {/* INPUT */}
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-900 border border-zinc-800">
         <button
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen((v) => !v)}
           className={clsx(
             "p-2 rounded-md transition",
             open ? "bg-red-600 text-white" : "hover:bg-zinc-800"
@@ -334,46 +299,22 @@ export default function ChatInput() {
           <Plus size={18} />
         </button>
 
-        {/* Textarea */}
         <textarea
-          className="flex-1 bg-transparent resize-none outline-none text-sm text-zinc-100"
+          rows={1}
+          placeholder="Escribe un mensaje..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          rows={1}
-          placeholder="Escribe un mensaje..."
+          className="flex-1 bg-transparent resize-none outline-none text-sm text-zinc-100"
         />
 
-        {/* Botón enviar */}
         <button
           onClick={handleSend}
-          className="px-3 py-1.5 bg-red-600 rounded-md text-sm hover:bg-red-700 transition"
+          className="px-3 py-1.5 bg-red-600 rounded-md text-sm hover:bg-red-700"
         >
           Enviar
         </button>
       </div>
-
-      {/* ZOOM DE IMAGEN (overlay pantalla completa) */}
-      {zoomImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-          <div className="relative max-w-3xl max-h-[80vh]">
-            <button
-              onClick={() => setZoomImage(null)}
-              className="absolute -top-10 right-0 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg"
-            >
-              <X size={18} />
-            </button>
-            <div className="flex items-center justify-center gap-2 mb-2 text-zinc-200 text-xs opacity-80">
-              <Maximize2 size={14} />
-              <span>Vista previa del adjunto</span>
-            </div>
-            <img
-              src={zoomImage}
-              className="max-w-full max-h-[80vh] rounded-xl border border-red-500/40 shadow-[0_0_40px_rgba(248,113,113,0.4)] object-contain"
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
