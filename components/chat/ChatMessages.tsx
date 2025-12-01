@@ -7,7 +7,7 @@ import clsx from "clsx";
 
 type Props = {
   messages: Message[];
-  isTyping?: boolean; // viene desde ChatLayout
+  isTyping?: boolean;
 };
 
 type MessageGroup = {
@@ -20,7 +20,7 @@ function groupByDate(messages: Message[]): MessageGroup[] {
 
   for (const m of messages) {
     const d = new Date(m.createdAt);
-    const key = d.toDateString(); // agrupa por día
+    const key = d.toDateString();
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(m);
   }
@@ -39,7 +39,6 @@ export default function ChatMessages({ messages, isTyping }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const grouped = groupByDate(messages ?? []);
 
-  // Auto-scroll suave al final
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -72,7 +71,7 @@ export default function ChatMessages({ messages, isTyping }: Props) {
         </div>
       ))}
 
-      {/* Indicador de escritura del asistente */}
+      {/* Indicador de “Bakubin está escribiendo…” */}
       {isTyping && (
         <div className="w-full flex justify-start mt-2">
           <div className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-300">

@@ -7,8 +7,14 @@ export type ModalType = "clear-chat" | "delete-chat" | "info" | null;
 export type Message = {
   id: string;
   role: "user" | "assistant";
-  content: string;
+  content: string;        // texto o URL (para imagen/archivo)
   createdAt: number;
+
+  // Para adjuntos (opcionales)
+  type?: "text" | "image" | "file" | "audio";
+  fileName?: string;
+  fileType?: string;
+  fileSize?: number;
 };
 
 export type Chat = {
