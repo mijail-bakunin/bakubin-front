@@ -11,7 +11,6 @@ export default function FloatingToolbar() {
 
   const createChat = useChatStore((s) => s.createChat);
   const regenerateLastMessage = useChatStore((s) => s.regenerateLastMessage);
-
   const openModal = useChatStore((s) => s.openModal);
 
   const activeChat = chats.find((c) => c.id === activeChatId);
@@ -44,14 +43,14 @@ export default function FloatingToolbar() {
 
       <ToolbarItem
         label="Limpiar chat"
-        onClick={() => openModal("clear-chat", activeChatId)}
+        onClick={() => activeChatId ? openModal("clear-chat", activeChatId) : undefined}
         icon={<Eraser size={18} />}
         disabled={!hasMessages}
       />
 
       <ToolbarItem
         label="Eliminar chat"
-        onClick={() => openModal("delete-chat", activeChatId)}
+        onClick={() => activeChatId ? openModal("delete-chat", activeChatId) : undefined}
         icon={<Trash2 size={18} />}
         disabled={!activeChatId}
       />
@@ -61,7 +60,6 @@ export default function FloatingToolbar() {
         onClick={() => openModal("info")}
         icon={<Info size={18} />}
       />
-      
     </div>
   );
 }

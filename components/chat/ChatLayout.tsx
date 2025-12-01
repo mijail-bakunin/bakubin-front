@@ -16,37 +16,51 @@ export default function ChatLayout() {
 
   const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
 
-  // Seleccionar primer chat automáticamente
+  // Autoseleccionar el primer chat al cargar
   useEffect(() => {
     if (!activeChatId && chats.length > 0) {
       setActiveChat(chats[0].id);
     }
   }, [activeChatId, chats.length, setActiveChat]);
 
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  // Auto-scroll al final
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [activeChat?.messages.length, activeChat?.isGenerating]);
 
   return (
     <div className="flex h-screen w-full bg-black text-white overflow-hidden">
       <ChatSidebar />
 
-      {/* Zona de chat */}
+      {/* Contenedor principal de chat */}
       <div className="relative flex flex-col flex-1 h-full">
 
-        {/* Floating toolbar SIEMPRE arriba, independiente del scroll */}
+        {/* Toolbar flotante — fija y no dependiente del scroll */}
         <FloatingToolbar />
 
         {activeChat ? (
           <>
             <ChatTopbar />
 
-            {/* Área scrollable unificada */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4">
+            {/* Mensajes con scroll */}
+            <div className="flex-1 overflow-y-auto">
               <ChatMessages
                 messages={activeChat.messages}
-                scrollRef={scrollRef}
+                isTyping={activeChat.isGenerating}
               />
+
+              {/* Marcador para auto-scroll */}
+              <div ref={messagesEndRef} />
             </div>
 
+            {/* Input */}
             <div className="border-t border-zinc-800 p-4">
               <ChatInput />
             </div>

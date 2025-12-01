@@ -12,25 +12,17 @@ type Props = {
 export default function ChatMessage({ message }: Props) {
   const isUser = message.role === "user";
 
-  // Texto mostrado en pantalla (streaming sólo para IA)
+  // Texto mostrado (para streaming simulado)
   const [displayed, setDisplayed] = useState(
     isUser ? message.content : ""
   );
 
   useEffect(() => {
-    // El usuario nunca streamea
     if (isUser) {
       setDisplayed(message.content);
       return;
     }
 
-    // Para textos cortos (<50 chars), no streameamos para que sea más natural
-    if (message.content.length < 50) {
-      setDisplayed(message.content);
-      return;
-    }
-
-    // STREAMING DEL ASISTENTE
     let i = 0;
     setDisplayed("");
 
@@ -46,22 +38,35 @@ export default function ChatMessage({ message }: Props) {
     return () => clearInterval(interval);
   }, [message.content, isUser]);
 
-  const bubbleClass = isUser
-    ? "ml-auto bg-red-700 text-white"
-    : "mr-auto bg-zinc-800 text-zinc-200";
-
   return (
     <div
       className={clsx(
-        "p-3 rounded-lg max-w-[80%] text-sm leading-relaxed",
-        bubbleClass
+        "w-full flex",
+        isUser ? "justify-end" : "justify-start"
       )}
     >
-      {displayed.trim().length > 0 ? (
+      <div
+        className={clsx(
+          "max-w-[80%] text-sm leading-relaxed",
+          "rounded-2xl px-4 py-3",
+          "animate-fade-slide-up",
+          !isUser && "animate-assistant-bounce",
+          isUser
+            ? [
+                "bg-red-700 text-white",
+                "rounded-br-sm",
+                "shadow-[0_0_14px_rgba(248,113,113,0.35)]",
+              ]
+            : [
+                "bg-zinc-900 text-zinc-100",
+                "border border-zinc-800/80",
+                "rounded-bl-sm",
+                "shadow-[0_0_18px_rgba(0,0,0,0.85)]",
+              ]
+        )}
+      >
         <MarkdownRenderer content={displayed} />
-      ) : (
-        <span className="opacity-60">...</span>
-      )}
+      </div>
     </div>
   );
 }
