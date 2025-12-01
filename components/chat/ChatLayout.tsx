@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useChatStore } from "@/store/chatStore";
 import ChatSidebar from "./ChatSidebar";
 import ChatInput from "./ChatInput";
@@ -15,30 +15,32 @@ export default function ChatLayout() {
   const chats = useChatStore((s) => s.chats);
   const setActiveChat = useChatStore((s) => s.setActiveChat);
 
-  const activeChat = chats.find((c) => c.id === activeChatId) ?? null;
+  const activeChat =
+    chats.find((c) => c.id === activeChatId) ?? null;
 
   useEffect(() => {
     if (!activeChatId && chats.length > 0) {
       setActiveChat(chats[0].id);
     }
-  }, [activeChatId, chats.length, setActiveChat]);
+  }, [activeChatId, chats, setActiveChat]); // FIX
+  
 
   return (
-    
     <div className="flex h-screen w-full bg-black text-white overflow-hidden">
+
       <ChatSidebar />
 
       <div className="relative flex flex-col flex-1 h-full">
+
         <FloatingToolbar />
 
-      {/* Image Viewer GLOBAL */}
+        {/* Image Viewer GLOBAL */}
         <ImageViewer />
-        
+
         {activeChat ? (
           <>
             <ChatTopbar />
 
-            {/* Virtuoso maneja el scroll */}
             <ChatMessages
               messages={activeChat.messages}
               isTyping={activeChat.isGenerating}
