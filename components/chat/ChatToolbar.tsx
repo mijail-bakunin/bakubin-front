@@ -23,12 +23,13 @@ export default function ChatToolbar() {
       className={clsx(
         "fixed bottom-6 left-1/2 -translate-x-1/2 z-40",
         "transition-all duration-300 ease-out",
-        hide ? "opacity-0 translate-y-6 pointer-events-none" : "opacity-100 translate-y-0"
+        hide
+          ? "opacity-0 translate-y-6 pointer-events-none"
+          : "opacity-100 translate-y-0"
       )}
     >
       <div
         className={clsx(
-          // DOCK
           "flex items-center gap-3 px-4 py-2 rounded-2xl shadow-2xl",
           "backdrop-blur-md bg-black/40 border border-red-500/10",
           "transition-all duration-300 ease-out",
@@ -37,7 +38,7 @@ export default function ChatToolbar() {
       >
         {buttons.map((btn, index) => (
           <div key={btn.id} className="flex items-center">
-            {/* Botón */}
+
             <button
               onClick={() => setActive(btn.id)}
               className={clsx(
@@ -51,7 +52,6 @@ export default function ChatToolbar() {
               {btn.icon}
             </button>
 
-            {/* SEPARADOR (salvo el último) */}
             {index < buttons.length - 1 && (
               <div className="w-[1px] h-5 bg-red-500/20 mx-2" />
             )}

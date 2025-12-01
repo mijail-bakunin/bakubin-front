@@ -7,7 +7,6 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighterLib } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-// Wrapper para evitar problemas con tipos/ref
 function CodeBlock({
   children,
   language,
@@ -40,12 +39,20 @@ type Props = {
 
 export default function MarkdownRenderer({ content }: Props) {
   const components: Components = {
-    code(props: any) {
-      const { inline, className, children } = props;
+    code(props) {
+      // Props tipados correctamente:
+      const {
+        inline,
+        className,
+        children,
+        ...rest
+      }: React.ComponentPropsWithoutRef<"code"> & {
+        inline?: boolean;
+        children?: React.ReactNode;
+      } = props;
 
       const match = /language-(\w+)/.exec(className || "");
 
-      // BLOQUES DE CÓDIGO
       if (!inline && match) {
         return (
           <CodeBlock language={match[1]}>
@@ -54,9 +61,11 @@ export default function MarkdownRenderer({ content }: Props) {
         );
       }
 
-      // INLINE CODE
       return (
-        <code className="px-1 py-0.5 rounded bg-zinc-800 text-red-300 text-[0.85rem]">
+        <code
+          {...rest}
+          className="px-1 py-0.5 rounded bg-zinc-800 text-red-300 text-[0.85rem]"
+        >
           {children}
         </code>
       );
@@ -104,3 +113,4 @@ export default function MarkdownRenderer({ content }: Props) {
     </ReactMarkdown>
   );
 }
+  
