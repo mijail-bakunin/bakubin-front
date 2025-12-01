@@ -1,34 +1,23 @@
 # =============================== BAKUBIN ===============================
 
 <!-- Estado del build (si usás GitHub Actions) -->
-![Build](https://img.shields.io/github/actions/workflow/status/tu_org/bakubin-frontend/ci.yml?label=build&logo=github)
+![Build](https://img.shields.io/github/actions/workflow/status/mijail-bakunin/bakubin-front/ci.yml?label=build&logo=github)
 
-<!-- Licencia -->
 ![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)
 
-<!-- Versión (manual o desde package.json vía GitHub) -->
-![Version](https://img.shields.io/github/package-json/v/tu_org/bakubin-frontend)
+![Version](https://img.shields.io/github/package-json/v/mijail-bakunin/bakubin-front)
 
-<!-- Gestor de paquetes: PNPM -->
 ![pnpm](https://img.shields.io/badge/pnpm-%234a7aff.svg?logo=pnpm&logoColor=white)
 
-<!-- Framework -->
 ![Next.js](https://img.shields.io/badge/Next.js-black?logo=next.js&logoColor=white)
 
-<!-- Node.js -->
 ![Node](https://img.shields.io/badge/node-%23339933.svg?logo=node.js&logoColor=white)
 
-<!-- Docker -->
 ![Docker](https://img.shields.io/badge/docker-ready-blue?logo=docker&logoColor=white)
 
-<!-- Estado del repositorio -->
 ![Status](https://img.shields.io/badge/status-active-success)
 
-<!-- Código abierto -->
-![Open Source](https://img.shields.io/badge/open--source-❤️-brightgreen)
-
-<!-- Último commit -->
-![Last Commit](https://img.shields.io/github/last-commit/tu_org/bakubin-frontend)
+![Last Commit](https://img.shields.io/github/last-commit/mijail-bakunin/bakubin-front)
 
 
 ---
