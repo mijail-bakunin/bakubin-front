@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import { useChatStore } from "@/store/chatStore";
+import {
+  Paperclip,
+  Mic,
+  Image,
+} from "lucide-react";
 
 export default function ChatInput() {
-  // Selectores seguros, UNO por propiedad:
   const activeChatId = useChatStore((s) => s.activeChatId);
   const addMessage = useChatStore((s) => s.addMessage);
   const addAssistantMessage = useChatStore((s) => s.addAssistantMessage);
@@ -12,13 +16,13 @@ export default function ChatInput() {
   const chats = useChatStore((s) => s.chats);
 
   const [value, setValue] = useState("");
+  const [openMenu, setOpenMenu] = useState(false);
 
   const handleSend = () => {
     if (!activeChatId || !value.trim()) return;
 
     const userMessage = value.trim();
 
-    // 1) Agregar el mensaje del usuario
     addMessage(activeChatId, {
       id: crypto.randomUUID(),
       role: "user",
@@ -26,47 +30,58 @@ export default function ChatInput() {
       createdAt: Date.now(),
     });
 
-    // 2) Si es el PRIMER mensaje del chat → renombrar automáticamente
     const chat = chats.find((c) => c.id === activeChatId);
     if (chat && chat.messages.length === 0) {
       renameChat(activeChatId, userMessage.slice(0, 42));
     }
 
-    // 3) Respuesta simulada
     setTimeout(() => {
-      addAssistantMessage(
-        activeChatId,
-        `Respuesta simulada a: "${userMessage}"`
-      );
+      addAssistantMessage(activeChatId, `Respuesta simulada a "${userMessage}"`);
     }, 400);
 
     setValue("");
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
   return (
-    <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-900 border border-zinc-800">
-      <textarea
-        className="flex-1 bg-transparent resize-none outline-none text-sm text-zinc-100"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        rows={1}
-        placeholder="Escribe un mensaje..."
-      />
+    <div className="relative">
+      {/* Panel vertical */}
+      {openMenu && (
+        <div className="absolute bottom-14 left-0 flex flex-col gap-2 p-3 rounded-xl bg-zinc-900 border border-zinc-700 shadow-2xl">
+          <button className="p-2 rounded-md hover:bg-zinc-700 transition">
+            <Paperclip size={18} />
+          </button>
+          <button className="p-2 rounded-md hover:bg-zinc-700 transition">
+            <Image size={18} />
+          </button>
+          <button className="p-2 rounded-md hover:bg-zinc-700 transition">
+            <Mic size={18} />
+          </button>
+        </div>
+      )}
 
-      <button
-        onClick={handleSend}
-        className="px-3 py-1.5 bg-red-600 rounded-md text-sm hover:bg-red-700 transition"
-      >
-        Enviar
-      </button>
+      <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-900 border border-zinc-800">
+        <button
+          onClick={() => setOpenMenu(!openMenu)}
+          className="p-2 rounded-md hover:bg-zinc-700 transition"
+        >
+          <span className="text-xl">+</span>
+        </button>
+
+        <textarea
+          className="flex-1 bg-transparent resize-none outline-none text-sm text-zinc-100"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          rows={1}
+          placeholder="Escribe un mensaje…"
+        />
+
+        <button
+          onClick={handleSend}
+          className="p-3 bg-red-600 rounded-md hover:bg-red-700 transition"
+        >
+          ➤
+        </button>
+      </div>
     </div>
   );
 }

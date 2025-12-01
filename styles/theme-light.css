@@ -1,0 +1,68 @@
+/* -------------------------------------------- */
+/*  C3 THEME – CLEAR IVORY (LIGHT)             */
+/* -------------------------------------------- */
+
+body.c3-light {
+  --bg-primary: #faf7f3;
+  --bg-secondary: #f3efea;
+  --bg-tertiary: #eae6e1;
+
+  --border-soft: rgba(120, 80, 80, 0.2);
+  --border-hard: rgba(120, 80, 80, 0.35);
+
+  --accent: #c03636;
+  --accent-soft: #a52b2b;
+  --accent-glow: #d84e4e;
+
+  --text-primary: #262626;
+  --text-secondary: #555;
+  --text-muted: #999;
+}
+
+/* FONDO GENERAL */
+body.c3-light {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* SIDEBAR */
+body.c3-light .sidebar {
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border-soft);
+}
+
+/* TOPBAR */
+body.c3-light .chat-topbar {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* MENSAJES */
+body.c3-light .msg-user {
+  background: var(--accent);
+  color: #fff;
+}
+
+body.c3-light .msg-assistant {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-soft);
+  color: var(--text-primary);
+}
+
+/* TOOLBAR */
+body.c3-light .floating-toolbar {
+  background: rgba(255,255,255,0.6);
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(10px);
+}
+
+body.c3-light .floating-toolbar button:hover {
+  color: var(--accent-soft);
+}
+
+/* INPUT */
+body.c3-light .chat-input {
+  background: #fff;
+  border: 1px solid var(--border-soft);
+}

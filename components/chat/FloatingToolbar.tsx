@@ -3,6 +3,7 @@
 import { Plus, RotateCcw, Eraser, Trash2, Info } from "lucide-react";
 import clsx from "clsx";
 import { useChatStore } from "@/store/chatStore";
+import ThemeToggle from "../ui/ThemeToggle";
 
 export default function FloatingToolbar() {
   const activeChatId = useChatStore((s) => s.activeChatId);
@@ -60,6 +61,7 @@ export default function FloatingToolbar() {
         onClick={() => openModal("info")}
         icon={<Info size={18} />}
       />
+      
     </div>
   );
 }

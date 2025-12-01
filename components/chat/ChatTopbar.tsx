@@ -3,9 +3,9 @@
 import { useChatStore } from "@/store/chatStore";
 import { RotateCcw, Info } from "lucide-react";
 import clsx from "clsx";
+import ThemeSwitch from "../ui/ThemeToggle";
 
 export default function ChatTopbar() {
-  // Selectores independientes (seguros)
   const activeChatId = useChatStore((s) => s.activeChatId);
   const chats = useChatStore((s) => s.chats);
   const regenerate = useChatStore((s) => s.regenerateLastMessage);
@@ -17,7 +17,7 @@ export default function ChatTopbar() {
   if (!chat) return null;
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-black/70 backdrop-blur">
+    <div className="chat-topbar justify-between px-6 py-4 flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-black/70 backdrop-blur">
       
       {/* Título */}
       <h1 className="text-lg font-medium opacity-90 truncate">
@@ -26,7 +26,7 @@ export default function ChatTopbar() {
 
       {/* Controles (solo para lectura o acciones rápidas) */}
       <div className="flex items-center gap-3">
-        
+        <ThemeSwitch/>
         {/* Regenerar */}
         <button
           onClick={() => activeChatId && regenerate(activeChatId)}
