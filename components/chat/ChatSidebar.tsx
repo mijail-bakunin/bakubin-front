@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useChatStore } from "@/store/chatStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
-
+import { groupChatsByTime } from "@/lib/groupChatsByTime";
 import ChatSidebarItem from "./ChatSidebarItem";
 import Tooltip from "../ui/Tooltip";
 
@@ -17,18 +17,26 @@ import {
 } from "lucide-react";
 
 import clsx from "clsx";
-import { groupChats } from "@/lib/groupChats";
 
 export default function ChatSidebar() {
   const chats = useChatStore((s) => s.chats);
   const createChat = useChatStore((s) => s.createChat);
   const activeChatId = useChatStore((s) => s.activeChatId);
 
+  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
+
   const { collapsed, toggle, setCollapsed, hydrated, hydrate } = useSidebarStore();
 
-  const groups = groupChats(chats);
+  const groups = groupChatsByTime(chats);
 
-  // Hidratar store en cliente
+  const toggleGroup = (groupName: string) => {
+    setCollapsedGroups(prev => ({
+      ...prev,
+      [groupName]: !prev[groupName]
+    }));
+  };
+
+  // Hidratar store
   useEffect(() => {
     hydrate();
   }, [hydrate]);
@@ -95,23 +103,32 @@ export default function ChatSidebar() {
       {!collapsed && (
         <div className="flex-1 overflow-y-auto mt-4 px-2 custom-scroll">
           {Object.entries(groups).map(([groupName, list]) =>
-            list.length > 0 ? (
-              <div key={groupName} className="mb-4">
-                <div className="text-xs px-2 py-1 text-zinc-500 uppercase tracking-wide">
-                  {groupName}
-                </div>
+            list.length > 0 && (
+              <div key={groupName} className="mb-3">
 
-                <div className="space-y-1">
-                  {list.map((chat) => (
-                    <ChatSidebarItem
-                      key={chat.id}
-                      chat={chat}
-                      active={chat.id === activeChatId}
-                    />
-                  ))}
-                </div>
+                {/* HEADER DEL GRUPO */}
+                <button
+                  onClick={() => toggleGroup(groupName)}
+                  className="w-full flex items-center justify-between px-2 py-1 text-xs text-zinc-400 hover:text-zinc-200 transition"
+                >
+                  <span>{groupName}</span>
+                  <span>{collapsedGroups[groupName] ? "›" : "⌄"}</span>
+                </button>
+
+                {/* CHATS DEL GRUPO */}
+                {!collapsedGroups[groupName] && (
+                  <div className="space-y-1 mt-1">
+                    {list.map((chat) => (
+                      <ChatSidebarItem
+                        key={chat.id}
+                        chat={chat}
+                        active={chat.id === activeChatId}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            ) : null
+            )
           )}
         </div>
       )}
