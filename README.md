@@ -1,4 +1,6 @@
-#  ================================================  BAKUBIN  ================================================
+#  ===============================  BAKUBIN  ===============================
+
+---
 
 📜 Frases de Bakunin
 
@@ -15,7 +17,10 @@
 
 > — **M. Bakunin, Estatismo y Anarquía (1873)**
 
+
+
 ---
+
 
 # 🔥 Panfleto
 
@@ -37,6 +42,13 @@
 
 > En un contexto donde la complejidad jurídica se transforma en barrera, este proyecto se propone invertir la relación de fuerzas:  
 > que el conocimiento vuelva a manos de quienes trabajan, estudian, sostienen y producen la vida universitaria.
+> Y cada acto de organización es, también, una forma de libertad.
+
+> Bakubin no es solo un modelo de lenguaje.  
+> Es una herramienta política, un dispositivo de memoria y una apuesta por la inteligencia colectiva.
+
+> En un contexto donde la complejidad jurídica se transforma en barrera, este proyecto se propone invertir la relación de fuerzas:  
+> que el conocimiento vuelva a manos de quienes trabajan, estudian, sostienen y producen la vida universitaria.
 
 > Bakubin nace para que ningún convenio, ninguna resolución, ninguna cláusula, ningún derecho quede oculto detrás del tecnicismo.
 
@@ -44,16 +56,28 @@
 
 > Nace para que la organización se fortalezca, para que la universidad sea para sus trabajadores, y para que la palabra vuelva a ser una herramienta de lucha.
 
+> Bakubin nace para que ningún convenio, ninguna resolución, ninguna cláusula, ningún derecho quede oculto detrás del tecnicismo.
+
+> Nace para que la información no sea un privilegio, sino un territorio común.
+
+> Nace para que la organización se fortalezca, para que la universidad sea para sus trabajadores, y para que la palabra vuelva a ser una herramienta de lucha.
+
+
 ---
 
+
 # Bakubin Frontend  
+
 **Interfaz del modelo de lenguaje Bakubin: una herramienta para la organización, la memoria y la lucha colectiva.**
+
 
 El repositorio contiene el **frontend oficial** del proyecto **Bakubin**, basado en **Next.js** y administrado con **pnpm**, diseñado para interactuar con el modelo entrenado en corpus jurídicos, sindicales, legislativos e históricos relevantes para los trabajadores de la **Universidad Nacional de Quilmes**.
 
 El nombre surge de la combinación entre **Bakunin** y **bin**, como metáfora de un sistema que procesa información con potencia emancipadora y claridad crítica, devolviendo autonomía y capacidad organizativa a quienes lo utilizan.
 
+
 ---
+
 
 ## ✨ Características principales
 
@@ -63,7 +87,9 @@ El nombre surge de la combinación entre **Bakunin** y **bin**, como metáfora d
 - **Enfoque:** interfaz ligera, accesible, extensible y apta para consultas en lenguaje natural  
 - **Arquitectura:** separación estricta entre frontend y backend del modelo  
 
+
 ---
+
 
 ## 📑 Tabla de contenidos
 
@@ -83,41 +109,13 @@ Este proyecto utiliza **pnpm**. Si no lo tenés instalado:
 
 ```bash
 npm install -g pnpm
-#  ================================================  BAKUBIN  ================================================
 
-> “La libertad sin socialismo es privilegio e injusticia; el socialismo sin libertad es esclavitud y brutalidad.”  
-> — **M. Bakunin, Estatismo y Anarquía (1873)**
 
----
 
-# 🔥 Panfleto
-
-> **Bakubin es una herramienta para quebrar la opacidad.**  
-> Para disputar el sentido, la palabra y el saber.  
-> Para intervenir donde otros pretenden que no miremos.
-
-> En un escenario donde lo jurídico se vuelve lenguaje críptico, la automatización algorítmica pretende reducir al trabajador a un dato, y la información circula como mercancía, Bakubin se planta como contra-dispositivo:  
-> **una tecnología orientada a la autonomía colectiva.**
-
-> Este proyecto busca abrir puertas, no cerrarlas; multiplicar voces, no silenciarlas; democratizar el conocimiento, no privatizarlo.
-
-> Porque cada resolución comprendida, cada convenio interpretado y cada derecho ejercido es un acto de organización.
-
-> Y cada acto de organización es, también, una forma de libertad.
-
-> Bakubin no es solo un modelo de lenguaje.  
-> Es una herramienta política, un dispositivo de memoria y una apuesta por la inteligencia colectiva.
-
-> En un contexto donde la complejidad jurídica se transforma en barrera, este proyecto se propone invertir la relación de fuerzas:  
-> que el conocimiento vuelva a manos de quienes trabajan, estudian, sostienen y producen la vida universitaria.
-
-> Bakubin nace para que ningún convenio, ninguna resolución, ninguna cláusula, ningún derecho quede oculto detrás del tecnicismo.
-
-> Nace para que la información no sea un privilegio, sino un territorio común.
-
-> Nace para que la organización se fortalezca, para que la universidad sea para sus trabajadores, y para que la palabra vuelva a ser una herramienta de lucha.
 
 ---
+
+
 
 # Bakubin Frontend  
 **Interfaz del modelo de lenguaje Bakubin: una herramienta para la organización, la memoria y la lucha colectiva.**
@@ -126,7 +124,9 @@ El repositorio contiene el **frontend oficial** del proyecto **Bakubin**, basado
 
 El nombre surge de la combinación entre **Bakunin** y **bin**, como metáfora de un sistema que procesa información con potencia emancipadora y claridad crítica, devolviendo autonomía y capacidad organizativa a quienes lo utilizan.
 
+
 ---
+
 
 ## ✨ Características principales
 
