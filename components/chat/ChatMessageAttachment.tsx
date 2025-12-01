@@ -3,12 +3,13 @@
 import { Message } from "@/store/chatStore";
 import clsx from "clsx";
 import { FileText, Image as ImageIcon, Volume2 } from "lucide-react";
+import { useImageViewerStore } from "@/store/useImageViewerStore";
 
-type Props = {
-  message: Message;
-};
+type Props = { message: Message };
 
 export default function ChatMessageAttachment({ message }: Props) {
+  const { open } = useImageViewerStore();
+
   const isUser = message.role === "user";
   const isImage =
     message.type === "image" ||
@@ -20,17 +21,10 @@ export default function ChatMessageAttachment({ message }: Props) {
   const label = message.fileName || "Adjunto";
 
   return (
-    <div
-      className={clsx(
-        "w-full flex",
-        isUser ? "justify-end" : "justify-start"
-      )}
-    >
+    <div className={clsx("w-full flex", isUser ? "justify-end" : "justify-start")}>
       <div
         className={clsx(
-          "max-w-[80%] rounded-2xl p-3",
-          "backdrop-blur-md border",
-          "animate-fade-slide-up",
+          "max-w-[80%] rounded-2xl p-3 backdrop-blur-md border animate-fade-slide-up",
           isUser
             ? [
                 "bg-red-600/20 border-red-500/60",
@@ -44,7 +38,7 @@ export default function ChatMessageAttachment({ message }: Props) {
               ]
         )}
       >
-        {/* Contenido principal */}
+        {/* HEADER */}
         <div className="flex items-center gap-3 mb-2">
           <div
             className={clsx(
@@ -62,36 +56,28 @@ export default function ChatMessageAttachment({ message }: Props) {
           </div>
 
           <div className="flex flex-col min-w-0">
-            <span className="text-xs font-medium text-zinc-100 truncate">
-              {label}
-            </span>
+            <span className="text-xs font-medium text-zinc-100 truncate">{label}</span>
             {message.fileType && (
-              <span className="text-[11px] text-zinc-400">
-                {message.fileType}
-              </span>
+              <span className="text-[11px] text-zinc-400">{message.fileType}</span>
             )}
           </div>
         </div>
 
-        {/* Preview si es imagen */}
+        {/* IMAGEN */}
         {isImage && (
-          <div className="mt-1 overflow-hidden rounded-xl border border-zinc-700/70 bg-black/40">
-            <a
-              href={message.content}
-              target="_blank"
-              rel="noreferrer"
-              className="block"
-            >
-              <img
-                src={message.content}
-                alt={label}
-                className="max-h-60 w-full object-cover hover:opacity-95 transition"
-              />
-            </a>
+          <div
+            className="mt-1 overflow-hidden rounded-xl border border-zinc-700/70 bg-black/40 cursor-zoom-in"
+            onClick={() => open(message.content)}
+          >
+            <img
+              src={message.content}
+              alt={label}
+              className="max-h-60 w-full object-cover hover:opacity-95 transition"
+            />
           </div>
         )}
 
-        {/* Link de descarga / apertura */}
+        {/* ARCHIVO */}
         {!isImage && (
           <div className="mt-1">
             <a

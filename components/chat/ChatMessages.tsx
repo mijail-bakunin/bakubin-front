@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Message } from "@/store/chatStore";
 import ChatMessage from "./ChatMessage";
 import clsx from "clsx";
@@ -37,15 +37,19 @@ function groupByDate(messages: Message[]): MessageGroup[] {
 
 export default function ChatMessages({ messages, isTyping }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   const grouped = groupByDate(messages ?? []);
 
+  // Auto-scroll sin romper input ni adjuntos
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    el.scrollTo({
-      top: el.scrollHeight,
-      behavior: "smooth",
+    requestAnimationFrame(() => {
+      el.scrollTo({
+        top: el.scrollHeight,
+        behavior: "smooth",
+      });
     });
   }, [messages.length, isTyping]);
 
@@ -71,10 +75,10 @@ export default function ChatMessages({ messages, isTyping }: Props) {
         </div>
       ))}
 
-      {/* Indicador de “Bakubin está escribiendo…” */}
+      {/* Indicador de que Bakubin está escribiendo */}
       {isTyping && (
         <div className="w-full flex justify-start mt-2">
-          <div className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-300">
+          <div className="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-xs text-zinc-300 animate-fade-slide-up">
             <span className="typing-dots">
               <span />
               <span />

@@ -44,6 +44,9 @@ importers:
       react-syntax-highlighter:
         specifier: ^16.1.0
         version: 16.1.0(react@19.2.0)
+      react-virtuoso:
+        specifier: ^4.16.1
+        version: 4.16.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
@@ -2001,6 +2004,12 @@ packages:
     engines: {node: '>= 16.20.2'}
     peerDependencies:
       react: '>= 0.14.0'
+
+  react-virtuoso@4.16.1:
+    resolution: {integrity: sha512-V9ZDw7TFspJb02gNWqHyVZvaMaCFaoL30F/tOVepCI12kdLjA2oxFfWvNC66AVJdOH5cwiq8317p2Q9OpG+TDw==}
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18 || >= 19'
+      react-dom: '>=16 || >=17 || >= 18 || >=19'
 
   react@19.2.0:
     resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
@@ -4637,6 +4646,11 @@ snapshots:
       prismjs: 1.30.0
       react: 19.2.0
       refractor: 5.0.0
+
+  react-virtuoso@4.16.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   react@19.2.0: {}
 

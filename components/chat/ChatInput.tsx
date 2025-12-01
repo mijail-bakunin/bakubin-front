@@ -224,7 +224,9 @@ export default function ChatInput() {
     <div ref={dropRef} className="relative">
 
       {/* PREVIEW DE ADJUNTOS (centrada, sin scroll visible) */}
-      {attachments.length > 0 && (
+      {
+      
+      attachments.length > 0 && (
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-3 px-3 py-2 rounded-2xl bg-black/80 border border-zinc-700/80 shadow-2xl">
           {attachments.map((att, idx) => (
             <div
