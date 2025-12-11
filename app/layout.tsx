@@ -10,7 +10,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  console.log("ROOT LAYOUT ACTIVO");
   return (
     <html lang="es" className="h-full bg-black">
       <body className="c2 c3-carbon h-full min-h-screen bg-black text-white overflow-hidden">

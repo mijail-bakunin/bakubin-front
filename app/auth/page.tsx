@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
@@ -49,6 +50,8 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter(); // <—— agregado
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -68,8 +71,10 @@ function LoginForm() {
         return;
       }
 
-      console.log("LOGIN OK", data);
-      // TODO: Guardar usuario, manejar tokens, redirigir
+      // ===== REDIRECCIÓN =====
+      setLoading(true);
+      router.push("/chat");
+
     } catch (err: any) {
       setError("Error de conexión con el servidor.");
     } finally {
@@ -117,6 +122,7 @@ function LoginForm() {
   );
 }
 
+
 /* ========================================================================================== */
 /* REGISTER FORM */
 /* ========================================================================================== */
@@ -157,7 +163,6 @@ function RegisterForm() {
 
       setSuccess("Cuenta creada correctamente. Verificá tu email.");
 
-      console.log("REGISTER OK:", data);
     } catch (err) {
       setError("Error de conexión con el servidor.");
     } finally {
