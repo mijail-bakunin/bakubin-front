@@ -53,6 +53,7 @@ function LoginForm() {
   const router = useRouter(); // <—— agregado
 
   async function handleLogin(e: React.FormEvent) {
+    const t0 = performance.now();
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -65,6 +66,8 @@ function LoginForm() {
       });
 
       const data = await res.json();
+    const elapsed = performance.now() - t0;
+    console.log("FETCH TIME (ms):", elapsed);
 
       if (!res.ok) {
         setError(data.message ?? "Error inesperado");
