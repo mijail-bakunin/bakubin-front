@@ -1,0 +1,5 @@
+ignoredBuiltDependencies:
+  - argon2
+  - bcrypt
+  - sharp
+  - unrs-resolver
