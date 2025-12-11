@@ -1,5 +1,7 @@
 import ChatLayout from "@/components/chat/ChatLayout";
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return <ChatLayout />;
+  redirect("/auth");
+  //return <ChatLayout />;
 }
