@@ -2,8 +2,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
+const ROLES = [
+  "Docentes",
+  "Investigadores",
+  "Autoridades",
+  "Administrativos",
+  "Servicios Generales",
+  "Soporte técnico",
+  "Biblioteca",
+  "Extensión",
+  "Personal contratado",
+  "Seguridad",
+];
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -41,19 +55,18 @@ export default function AuthPage() {
   );
 }
 
-/* ========================================================================================== */
-/* LOGIN FORM */
-/* ========================================================================================== */
+/* ================= LOGIN ================= */
+
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter(); // <—— agregado
+  const router = useRouter();
+  const setUser = useAuthStore((s) => s.setUser);
 
   async function handleLogin(e: React.FormEvent) {
-    const t0 = performance.now();
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -66,19 +79,16 @@ function LoginForm() {
       });
 
       const data = await res.json();
-    const elapsed = performance.now() - t0;
-    console.log("FETCH TIME (ms):", elapsed);
 
       if (!res.ok) {
         setError(data.message ?? "Error inesperado");
         return;
       }
 
-      // ===== REDIRECCIÓN =====
-      setLoading(true);
+      setUser(data.user);
+      localStorage.setItem("auth_user", JSON.stringify(data.user));
       router.push("/chat");
-
-    } catch (err: any) {
+    } catch {
       setError("Error de conexión con el servidor.");
     } finally {
       setLoading(false);
@@ -125,15 +135,15 @@ function LoginForm() {
   );
 }
 
+/* ================= REGISTER ================= */
 
-/* ========================================================================================== */
-/* REGISTER FORM */
-/* ========================================================================================== */
 function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [roleOpen, setRoleOpen] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -143,6 +153,12 @@ function RegisterForm() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    if (!role) {
+      setError("Debés seleccionar tu rol dentro de la institución.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -152,6 +168,7 @@ function RegisterForm() {
         body: JSON.stringify({
           name,
           email,
+          role,
           password,
           confirmPassword,
         }),
@@ -165,8 +182,7 @@ function RegisterForm() {
       }
 
       setSuccess("Cuenta creada correctamente. Verificá tu email.");
-
-    } catch (err) {
+    } catch {
       setError("Error de conexión con el servidor.");
     } finally {
       setLoading(false);
@@ -200,6 +216,58 @@ function RegisterForm() {
           placeholder="tu@correo.com"
         />
       </div>
+
+      {/* ===== NUEVO CAMPO: ROL ===== */}
+        <div className="flex flex-col gap-1">
+          <label className="text-sm opacity-80">Rol en la institución</label>
+
+          <div className="relative">
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              onFocus={() => setRoleOpen(true)}
+              onBlur={() => setRoleOpen(false)}
+              className="
+                w-full
+                appearance-none
+                px-3 py-2 pr-10
+                rounded-md
+                bg-[var(--bg-tertiary)]
+                border border-[var(--border-soft)]
+                text-sm
+                focus:border-[var(--accent)]
+                focus:outline-none
+                transition-colors
+              "
+            >
+              <option value="" disabled>
+                Seleccioná tu rol
+              </option>
+
+              {ROLES.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+
+            <div
+              className="
+                pointer-events-none
+                absolute
+                right-3
+                top-1/2
+                -translate-y-1/2
+                text-[var(--accent)]
+                transition-transform
+                duration-200
+              "
+              style={{ transform: `translateY(-50%) rotate(${roleOpen ? 180 : 0}deg)` }}
+            >
+              ▼
+            </div>
+          </div>
+        </div>
 
       <div className="flex flex-col gap-1">
         <label className="text-sm opacity-80">Contraseña</label>

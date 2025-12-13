@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "@/store/chatStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
+import { useAuthStore } from "@/store/authStore";
 import { groupChatsByTime } from "@/lib/groupChatsByTime";
 import ChatSidebarItem from "./ChatSidebarItem";
-import Tooltip from "../ui/Tooltip";
-
 import UserMenu from "./UserMenu";
+import Tooltip from "../ui/Tooltip";
 
 import {
   Plus,
@@ -24,6 +24,9 @@ export default function ChatSidebar() {
   const chats = useChatStore((s) => s.chats);
   const createChat = useChatStore((s) => s.createChat);
   const activeChatId = useChatStore((s) => s.activeChatId);
+
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
 
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>(
     {}
@@ -55,9 +58,7 @@ export default function ChatSidebar() {
   }, [setCollapsed]);
 
   if (!hydrated) {
-    return (
-      <div className="w-16 h-full border-r border-zinc-900 bg-black/60" />
-    );
+    return <div className="w-16 h-full border-r border-zinc-900 bg-black/60" />;
   }
 
   return (
@@ -69,9 +70,9 @@ export default function ChatSidebar() {
       )}
       style={{ width: collapsed ? "4rem" : "16rem" }}
     >
-      {/* HEADER TOGGLE */}
+      {/* HEADER */}
       <div className="flex items-center justify-between p-3">
-        <Tooltip label={collapsed ? "Expandir" : "Colapsar"} disabled={false}>
+        <Tooltip label={collapsed ? "Expandir" : "Colapsar"}>
           <button
             onClick={toggle}
             className="p-2 rounded-md hover:bg-zinc-800 transition text-zinc-300"
@@ -81,7 +82,7 @@ export default function ChatSidebar() {
         </Tooltip>
       </div>
 
-      {/* BOTONES SUPERIORES */}
+      {/* BOTONES */}
       <div
         className={clsx(
           "flex flex-col gap-2 px-3",
@@ -101,24 +102,12 @@ export default function ChatSidebar() {
           </button>
         </Tooltip>
 
-        <SidebarMinimalButton
-          collapsed={collapsed}
-          icon={<Search size={16} />}
-          label="Buscar chats"
-        />
-        <SidebarMinimalButton
-          collapsed={collapsed}
-          icon={<Library size={16} />}
-          label="Biblioteca"
-        />
-        <SidebarMinimalButton
-          collapsed={collapsed}
-          icon={<Folder size={16} />}
-          label="Proyectos"
-        />
+        <SidebarMinimalButton collapsed={collapsed} icon={<Search size={16} />} label="Buscar chats" />
+        <SidebarMinimalButton collapsed={collapsed} icon={<Library size={16} />} label="Biblioteca" />
+        <SidebarMinimalButton collapsed={collapsed} icon={<Folder size={16} />} label="Proyectos" />
       </div>
 
-      {/* LISTA DE CHATS */}
+      {/* CHATS */}
       {!collapsed && (
         <div className="flex-1 overflow-y-auto mt-4 px-2 custom-scroll">
           {Object.entries(groups).map(
@@ -150,21 +139,18 @@ export default function ChatSidebar() {
         </div>
       )}
 
-      {/* ========================== */}
-      {/*         USER MENU          */}
-      {/* ========================== */}
-
+      {/* USER MENU */}
       <div className={clsx("p-3 border-t border-zinc-900", collapsed && "px-1")}>
-        <UserMenu
-          name="Horacio Valenzuela"
-          email="valenzuela@example.com"
-          plan="Plus"
-          collapsed={collapsed}
-          onLogout={() => {
-            localStorage.removeItem("session");
-            window.location.href = "/auth";
-          }}
-        />
+        {user && (
+          <UserMenu
+            collapsed={collapsed}
+            onLogout={() => {
+              logout();
+              localStorage.removeItem("auth_user");
+              window.location.href = "/auth";
+            }}
+          />
+        )}
       </div>
     </div>
   );
