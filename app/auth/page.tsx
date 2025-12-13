@@ -3,34 +3,48 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import Image from "next/image";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 
 const ROLES = [
-  "Docentes",
-  "Investigadores",
-  "Autoridades",
-  "Administrativos",
-  "Servicios Generales",
-  "Soporte técnico",
-  "Biblioteca",
-  "Extensión",
-  "Personal contratado",
-  "Seguridad",
+  "DOCENTE",
+  "INVESTIGADOR",
+  "AUTORIDAD",
+  "ADMINISTRATIVO",
+  "SERVICIOS_GENERALES",
+  "SOPORTE_TECNICO",
+  "BIBLIOTECA",
+  "EXTENSION",
+  "PERSONAL_CONTRATADO",
+  "SEGURIDAD" 
 ];
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
 
-  return (
+ return (
     <div className="w-full max-w-md p-8 rounded-xl border border-[var(--border-soft)] bg-[var(--bg-secondary)] shadow-lg">
-      <h1 className="text-2xl font-semibold mb-6 text-center tracking-wide">
-        Bakubin
-      </h1>
+      
+      {/* ===== HEADER: LOGO + TÍTULO ===== */}
+      <div className="flex items-center justify-center gap-3 mb-6">
+        <Image
+          src="/bakubin.svg"
+          alt="Bakubin"
+          width={90}
+          height={90}
+          priority
+          className="opacity-90 mr-4 -translate-x-1"
+        />
+        <h1 className="text-2xl font-semibold tracking-wide">
+          Bakubin
+        </h1>
+      </div>
 
-      <p className="text-sm opacity-80 text-center mb-8">
-        Chat sindical con LLM especializado
+      <p className="text-xs opacity-80 text-center mb-8 whitespace-nowrap"> 
+      La libertad de cada uno solo es posible con la libertad de todos
       </p>
+
 
       <div className="flex mb-8">
         <button

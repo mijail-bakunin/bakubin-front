@@ -22,7 +22,8 @@ export default function UserMenu({
   if (!user) return null;
 
   const name = user.name ?? user.email;
-  const plan = "Plus"; // hardcodeado por ahora, como ChatGPT
+  const r = user.role;
+  const plan = r.charAt(0).toUpperCase() + r.slice(1).toLowerCase();; 
 
   const initials = name
     .split(" ")
