@@ -42,9 +42,6 @@ export default function ChatInput() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dropRef = useRef<HTMLDivElement | null>(null);
 
-  // -----------------------------
-  // FUNCIÓN MOVIDA ARRIBA (ESLint fix)
-  // -----------------------------
   const handleMultipleFiles = (fileList: FileList) => {
     const files = Array.from(fileList);
 
@@ -57,9 +54,6 @@ export default function ChatInput() {
     setAttachments((prev) => [...prev, ...newAttachments]);
   };
 
-  // -----------------------------
-  // cerrar menú al click fuera
-  // -----------------------------
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -71,9 +65,6 @@ export default function ChatInput() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  // -----------------------------
-  // drag & drop
-  // -----------------------------
   useEffect(() => {
     const area = dropRef.current;
     if (!area) return;

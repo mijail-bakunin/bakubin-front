@@ -4,7 +4,6 @@ import { useChatStore } from "@/store/chatStore";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function Modal() {
-  // SELECTORES 100% SEGUROS (NADA DE OBJETOS)
   const modal = useChatStore((s) => s.modal);
   const closeModal = useChatStore((s) => s.closeModal);
   const clearChat = useChatStore((s) => s.clearChat);

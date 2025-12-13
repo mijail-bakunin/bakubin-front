@@ -142,14 +142,7 @@ export default function ChatSidebar() {
       {/* USER MENU */}
       <div className={clsx("p-3 border-t border-zinc-900", collapsed && "px-1")}>
         {user && (
-          <UserMenu
-            collapsed={collapsed}
-            onLogout={() => {
-              logout();
-              localStorage.removeItem("auth_user");
-              window.location.href = "/auth";
-            }}
-          />
+          <UserMenu collapsed={collapsed} />
         )}
       </div>
     </div>

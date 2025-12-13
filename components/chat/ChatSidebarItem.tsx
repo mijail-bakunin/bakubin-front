@@ -11,7 +11,6 @@ type Props = {
 };
 
 export default function ChatSidebarItem({ chat, active }: Props) {
-  // Selectores atómicos (uno por propiedad → evita loops)
   const setActiveChat = useChatStore((s) => s.setActiveChat);
   const renameChat = useChatStore((s) => s.renameChat);
   const openModal = useChatStore((s) => s.openModal);
@@ -25,7 +24,7 @@ export default function ChatSidebarItem({ chat, active }: Props) {
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    openModal("delete-chat", chat.id); // solo este abre modal
+    openModal("delete-chat", chat.id); 
   };
 
   const handleEdit = (e: React.MouseEvent) => {

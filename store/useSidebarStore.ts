@@ -1,4 +1,3 @@
-// store/useSidebarStore.ts
 "use client";
 
 import { create } from "zustand";
@@ -12,8 +11,8 @@ type SidebarState = {
 };
 
 export const useSidebarStore = create<SidebarState>((set) => ({
-  collapsed: false,     // SSR SIEMPRE arranca expandido → no rompe hydration
-  hydrated: false,      // indica si ya leyó localStorage
+  collapsed: false,     
+  hydrated: false,    
 
   hydrate: () => {
     if (typeof window === "undefined") return;

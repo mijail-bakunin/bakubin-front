@@ -18,7 +18,6 @@ export default function UserMenu({
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
 
-  // Seguridad defensiva: si por alguna razón no hay usuario
   if (!user) return null;
 
   const name = user.name ?? user.email;

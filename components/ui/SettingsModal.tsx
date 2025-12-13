@@ -12,7 +12,6 @@ const sections = [
   { id: "acerca", label: "Acerca de" },
 ];
 
-// Animación interna
 const fadeSlide = `
   transition-all duration-300 ease-out
   opacity-0 translate-x-2
@@ -40,7 +39,6 @@ export default function SettingsModal({
 
   if (!mounted || !open) return null;
 
-  // Cambio de sección con transición suave
   const onSelectSection = (id: string) => {
     if (id === active) return;
     setTransitioning(true);

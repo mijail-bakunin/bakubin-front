@@ -17,7 +17,7 @@ export default function ChatTopbar() {
   if (!chat) return null;
 
   return (
-    <div className="chat-topbar justify-between px-6 py-4 flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-black/70 backdrop-blur">
+    <div className="chat-topbar flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-black/70 backdrop-blur">
       
       {/* Título */}
       <h1 className="text-lg font-medium opacity-90 truncate">
