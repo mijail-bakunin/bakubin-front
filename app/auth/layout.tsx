@@ -1,4 +1,3 @@
-// app/auth/layout.tsx
 export const metadata = {
   title: "Bakubin – Acceso",
   description: "Autenticación para Bakubin",

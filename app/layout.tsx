@@ -7,7 +7,12 @@ import AuthHydration from "@/components/chat/AuthHydration";
 
 export const metadata = {
   title: "Bakubin",
-  description: "Chat estilo ChatGPT personalizado",
+  description: "Chat sindical con LLM especializado",
+  icons: {
+    icon: "/bakubin_32_wr.ico",
+    shortcut: "/bakubin_32_wr.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

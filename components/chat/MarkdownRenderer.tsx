@@ -40,7 +40,6 @@ type Props = {
 export default function MarkdownRenderer({ content }: Props) {
   const components: Components = {
     code(props) {
-      // Props tipados correctamente:
       const {
         inline,
         className,

@@ -18,11 +18,11 @@ export default function UserMenu({
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
 
-  // Seguridad defensiva: si por alguna razón no hay usuario
   if (!user) return null;
 
   const name = user.name ?? user.email;
-  const plan = "Plus"; // hardcodeado por ahora, como ChatGPT
+  const r = user.role;
+  const plan = r.charAt(0).toUpperCase() + r.slice(1).toLowerCase();; 
 
   const initials = name
     .split(" ")
