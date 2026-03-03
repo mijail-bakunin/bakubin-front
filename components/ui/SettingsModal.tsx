@@ -24,18 +24,20 @@ export default function SettingsModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = typeof window !== "undefined";
   const [active, setActive] = useState("general");
   const [transitioning, setTransitioning] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    if (!mounted) return;
+
     if (open) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
+
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [open, mounted]);
 
   if (!mounted || !open) return null;
 

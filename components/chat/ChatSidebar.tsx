@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { useChatStore } from "@/store/chatStore";
 import { useSidebarStore } from "@/store/useSidebarStore";
 import { useAuthStore } from "@/store/authStore";
@@ -102,9 +102,21 @@ export default function ChatSidebar() {
           </button>
         </Tooltip>
 
-        <SidebarMinimalButton collapsed={collapsed} icon={<Search size={16} />} label="Buscar chats" />
-        <SidebarMinimalButton collapsed={collapsed} icon={<Library size={16} />} label="Biblioteca" />
-        <SidebarMinimalButton collapsed={collapsed} icon={<Folder size={16} />} label="Proyectos" />
+        <SidebarMinimalButton
+          collapsed={collapsed}
+          icon={<Search size={16} />}
+          label="Buscar chats"
+        />
+        <SidebarMinimalButton
+          collapsed={collapsed}
+          icon={<Library size={16} />}
+          label="Biblioteca"
+        />
+        <SidebarMinimalButton
+          collapsed={collapsed}
+          icon={<Folder size={16} />}
+          label="Proyectos"
+        />
       </div>
 
       {/* CHATS */}
@@ -141,15 +153,23 @@ export default function ChatSidebar() {
 
       {/* USER MENU */}
       <div className={clsx("p-3 border-t border-zinc-900", collapsed && "px-1")}>
-        {user && (
-          <UserMenu collapsed={collapsed} />
-        )}
+        {user && <UserMenu collapsed={collapsed} />}
       </div>
     </div>
   );
 }
 
-function SidebarMinimalButton({ collapsed, icon, label }: any) {
+type SidebarMinimalButtonProps = {
+  collapsed: boolean;
+  icon: ReactNode;
+  label: string;
+};
+
+function SidebarMinimalButton({
+  collapsed,
+  icon,
+  label,
+}: SidebarMinimalButtonProps) {
   return (
     <Tooltip label={label} side="right" disabled={collapsed}>
       <button
